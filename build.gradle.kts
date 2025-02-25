@@ -35,6 +35,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.4.3")
+    implementation("org.springframework.retry:spring-retry:2.0.11")
 }
 
 tasks.withType<Test> {

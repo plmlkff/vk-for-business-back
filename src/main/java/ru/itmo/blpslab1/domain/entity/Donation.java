@@ -34,4 +34,8 @@ public class Donation {
     @ManyToOne
     @JoinColumn(name = "group_id")
     private Group group;
+
+    @Version
+    @Column
+    private Integer version;
 }

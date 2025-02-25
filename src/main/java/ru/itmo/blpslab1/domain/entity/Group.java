@@ -9,7 +9,7 @@ import lombok.Setter;
 import java.util.Set;
 import java.util.UUID;
 
-@Table(name = "group")
+@Table(name = "community_group")
 @Entity
 @Getter
 @Setter

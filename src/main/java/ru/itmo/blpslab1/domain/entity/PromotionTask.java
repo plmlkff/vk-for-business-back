@@ -1,39 +1,45 @@
 package ru.itmo.blpslab1.domain.entity;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
+import ru.itmo.blpslab1.domain.enums.PromotionType;
 
 import java.util.UUID;
 
-@Table(name = "tariff")
 @Entity
+@Table(name = "promotion_task")
 @Getter
 @Setter
-public class Tariff {
+public class PromotionTask {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
     @NotNull
-    private String name;
+    private String subject;
 
     @Column(nullable = false)
     @NotNull
-    @Min(0)
-    private Double price;
+    private String body;
+
+    @Column(name = "is_approved", nullable = false)
+    private boolean isApproved = false;
 
     @Column
     @Size(max = 20 * 1024 * 1024) //  20 Мб
-    private byte[] preview;
+    private byte[] image;
+
+    @Column(name = "type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private PromotionType promotionType;
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     @NotNull
     private Group group;
-
 }

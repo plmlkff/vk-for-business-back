@@ -11,8 +11,8 @@ spring:
     password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
-    hibernate:
-      ddl-auto: create
     show-sql: true
+    hibernate:
+      ddl-auto: validate
   liquibase:
-    enabled: false
+    enabled: true

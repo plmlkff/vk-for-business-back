@@ -17,11 +17,11 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "date_start", nullable = false)
     @NotNull
     private Date from;
 
-    @Column(nullable = false)
+    @Column(name = "date_end", nullable = false)
     @NotNull
     private Date to;
 
