@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:17
+    ports:
+      - 5432:5432
+    container_name: postgres
+    healthcheck:
+      start_period: 1s
+      test: ["CMD", "pg_isready", "-U", "${POSTGRES_USER}", "-d", "${POSTGRES_DB}"]
+    env_file:
+      - .env
