@@ -1,3 +1,5 @@
+all: up
+
 .PHONY: up, down
 
 up:

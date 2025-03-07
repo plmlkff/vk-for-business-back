@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_person")
+@Table(name = "person")
 @Getter
 @Setter
 public class User {
@@ -24,6 +24,10 @@ public class User {
     @Column(nullable = false)
     @NotNull
     private String surname;
+
+    @Column(nullable = false)
+    @NotNull
+    private String login;
 
     @Column(nullable = false)
     @NotNull

@@ -13,18 +13,6 @@ create table community_group
     name     varchar(255) not null
 );
 
-create table donation
-(
-    id             uuid         primary key ,
-    amount         float(53)    not null,
-    current_amount float(53)    not null,
-    version        integer,
-    group_id       uuid,
-    target         varchar(255) not null,
-    constraint donation_amount_min_value_constr check ( amount >= 0 ),
-    constraint donation_current_amount_min_value_constr check ( current_amount >= 0 )
-);
-
 create table promotion_task
 (
     id          uuid         primary key ,
@@ -33,7 +21,7 @@ create table promotion_task
     group_id    uuid         not null,
     body        varchar(255) not null,
     subject     varchar(255) not null,
-    image       bytea,
+    image_name  varchar(128),
     constraint promotion_task_type_enum_value_constr check ( type in ('ORDERS', 'VIEWS', 'SUBSCRIBERS') )
 );
 
@@ -48,22 +36,35 @@ create table subscription
 
 create table tariff
 (
-    id       uuid         primary key ,
-    price    float(53)    not null check (price >= 0),
-    group_id uuid         not null,
-    name     varchar(255) not null,
-    preview  bytea,
+    id                 uuid         primary key,
+    price              float(53)    not null check (price >= 0),
+    group_id           uuid         not null,
+    name               varchar(255) not null,
+    preview_image_name varchar(128),
     constraint tariff_price_min_value_constr check ( price >= 0 )
 );
 
 create table transaction
 (
-    id               uuid         primary key,
-    amount           float(53)    not null check (amount >= 0),
-    donation_id      uuid         not null,
-    user_id          uuid         not null,
-    transaction_type varchar(255) not null,
+    id                uuid      primary key,
+    amount            float(53) not null check (amount >= 0),
+    payer_id          uuid      not null,
+    payer_card_id     uuid      not null,
+    recipient_card_id uuid      not null,
+    transaction_type  varchar(255) not null,
     constraint transaction_transaction_type_enum_value_constr check ( transaction_type in ('DEBIT', 'WITHDRAW') )
+);
+
+create table goal
+(
+    id          uuid         primary key,
+    name        varchar(128) not null,
+    target_sum  float        not null,
+    current_sum float        not null,
+    version     integer      not null,
+    constraint goal_target_sum_min_value_constr check ( goal.target_sum >= 0 ),
+    constraint goal_current_sum_min_value_constr check ( goal.current_sum >= 0 ),
+    constraint goal_version_value_constr check ( goal.version >= 0 )
 );
 
 create table user_authorities
@@ -73,7 +74,7 @@ create table user_authorities
     constraint user_authorities_authority_enum_value_constr check ( authority in ('VIEW_USER', 'EDIT_USER') )
 );
 
-create table user_person
+create table person
 (
     id         uuid         primary key,
     first_name varchar(255) not null,

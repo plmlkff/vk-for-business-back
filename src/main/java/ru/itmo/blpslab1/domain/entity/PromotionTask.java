@@ -29,9 +29,8 @@ public class PromotionTask {
     @Column(name = "is_approved", nullable = false)
     private boolean isApproved = false;
 
-    @Column
-    @Size(max = 20 * 1024 * 1024) //  20 Мб
-    private byte[] image;
+    @Column(name = "image_name")
+    private String imageName;
 
     @Column(name = "type", nullable = false)
     @Enumerated(EnumType.STRING)

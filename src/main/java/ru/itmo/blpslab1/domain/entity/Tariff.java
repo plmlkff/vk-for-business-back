@@ -27,9 +27,8 @@ public class Tariff {
     @Min(0)
     private Double price;
 
-    @Column
-    @Size(max = 20 * 1024 * 1024) //  20 Мб
-    private byte[] preview;
+    @Column(name = "preview_image_name")
+    private String previewImageName;
 
     @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)

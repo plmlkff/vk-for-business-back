@@ -36,6 +36,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     implementation("org.springframework.boot:spring-boot-starter-validation:3.4.3")
     implementation("org.springframework.retry:spring-retry:2.0.11")
+    implementation("io.jsonwebtoken:jjwt-api:0.11.5")
+    implementation("io.vavr:vavr:0.10.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 }
 
 tasks.withType<Test> {

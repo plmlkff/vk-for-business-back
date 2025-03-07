@@ -3,39 +3,35 @@ package ru.itmo.blpslab1.domain.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.UUID;
 
-@Table(name = "donation")
+@Table(name = "goal")
 @Entity
 @Getter
 @Setter
-public class Donation {
+public class Goal {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @Column(nullable = false)
     @NotNull
-    private String target;
+    @Size(min = 1)
+    private String name;
+
+    @Column(name = "target_sum", nullable = false)
+    @Min(0)
+    private Double targetSum;
+
+    @Column(name = "current_sum", nullable = false)
+    @Min(0)
+    private Double currentSum;
 
     @Column(nullable = false)
-    @NotNull
-    @Min(0)
-    private Double amount;
-
-    @Column(name = "current_amount", nullable = false)
-    @NotNull
-    @Min(0)
-    private Double currentAmount;
-
-    @ManyToOne
-    @JoinColumn(name = "group_id")
-    private Group group;
-
     @Version
-    @Column
     private Integer version;
 }

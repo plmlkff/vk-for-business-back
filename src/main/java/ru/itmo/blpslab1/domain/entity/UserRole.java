@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
 import ru.itmo.blpslab1.domain.enums.UserAuthority;
 
 import java.util.Set;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @Table(name = "user_role")
 @Getter
 @Setter
-public class UserRole {
+public class UserRole implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -30,4 +31,9 @@ public class UserRole {
     @Column(name = "authority")
     @Enumerated(EnumType.STRING)
     private Set<UserAuthority> authorities;
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

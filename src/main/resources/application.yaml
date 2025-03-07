@@ -16,3 +16,6 @@ spring:
       ddl-auto: validate
   liquibase:
     enabled: true
+  jwt:
+    life-time: 3600000  # ms
+    secret: ${SECRET}

@@ -29,12 +29,17 @@ public class Transaction {
     private Double amount;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "payer_id", nullable = false)
     @NotNull
-    private User creator;
+    private User payer;
 
-    @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "donation_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "payer_card_id", nullable = false)
     @NotNull
-    private Donation donation;
+    private CardCredential payerCard;
+
+    @ManyToOne
+    @JoinColumn(name = "recipient_card_id", nullable = false)
+    @NotNull
+    private CardCredential recipientCard;
 }
