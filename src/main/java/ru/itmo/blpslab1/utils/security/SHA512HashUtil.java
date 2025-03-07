@@ -16,7 +16,7 @@ public class SHA512HashUtil {
         }
     }
 
-    public static boolean check(String password, String hash) {
-        return hash(password).equals(hash);
+    public static boolean compare(String notHashed, String hashed) {
+        return hash(notHashed).equals(hashed);
     }
 }

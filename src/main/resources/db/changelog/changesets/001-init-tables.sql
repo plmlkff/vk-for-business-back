@@ -70,8 +70,7 @@ create table goal
 create table user_authorities
 (
     role_id   uuid not null,
-    authority varchar(255),
-    constraint user_authorities_authority_enum_value_constr check ( authority in ('VIEW_USER', 'EDIT_USER') )
+    authority varchar(255)
 );
 
 create table person
