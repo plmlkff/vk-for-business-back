@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.repository.GoalRepository
 import ru.itmo.blpslab1.rest.dto.request.GoalRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
@@ -22,7 +23,10 @@ import kotlin.jvm.optionals.getOrNull
 class GoalServiceImpl(
     private val goalRepository: GoalRepository
 ) : GoalService {
-    override fun createGoal(goalRequest: GoalRequest
+
+    @Transactional
+    override fun createGoal(
+        goalRequest: GoalRequest
     ): Either<HttpStatus, GoalResponse> {
         if (goalRequest.id != null) return BAD_REQUEST.left()
 
@@ -31,14 +35,20 @@ class GoalServiceImpl(
         return goalRepository.save(goal).toResponse().right()
     }
 
-    override fun getGoal(userDetails: UserDetails, id: UUID): Either<HttpStatus, GoalResponse> {
+    @Transactional
+    override fun getGoal(
+        userDetails: UserDetails, id: UUID
+    ): Either<HttpStatus, GoalResponse> {
         val goal = goalRepository.findById(id).getOrNull() ?: return NOT_FOUND.left()
 
         return if (userDetails hasNoAccessTo goal) METHOD_NOT_ALLOWED.left()
         else goal.toResponse().right()
     }
 
-    override fun editGoal(userDetails: UserDetails, goalRequest: GoalRequest): Either<HttpStatus, GoalResponse> {
+    @Transactional
+    override fun editGoal(
+        userDetails: UserDetails, goalRequest: GoalRequest
+    ): Either<HttpStatus, GoalResponse> {
         val goalId = goalRequest.id ?: return BAD_REQUEST.left()
 
         val dbGoal = goalRepository.findById(goalId).getOrNull() ?: return NOT_FOUND.left()
@@ -47,6 +57,7 @@ class GoalServiceImpl(
         else goalRepository.save(goalRequest.toDomain()).toResponse().right()
     }
 
+    @Transactional
     override fun removeGoal(
         userDetails: UserDetails, id: UUID
     ): Either<HttpStatus, Unit> {

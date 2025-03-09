@@ -1,6 +1,10 @@
 package ru.itmo.blpslab1.rest
 
+import arrow.core.Either
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
+import org.springframework.http.HttpStatus
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -11,39 +15,41 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.itmo.blpslab1.rest.dto.request.GoalRequest
-import ru.itmo.blpslab1.service.GoalService
+import ru.itmo.blpslab1.rest.dto.request.GroupRequest
+import ru.itmo.blpslab1.service.GroupService
 import ru.itmo.blpslab1.utils.core.toResponse
 import java.util.UUID
 
 @RestController
-@RequestMapping("/api/goals")
-class GoalController(
-    private val goalService: GoalService
-) {
+@RequestMapping("/api/groups")
+@SecurityRequirement(name = "JWT")
+class GroupController (
+    private val groupService: GroupService
+){
 
     @PostMapping("/")
-    fun createGoal(
-        @Valid @RequestBody goalRequest: GoalRequest
-    ) = goalService.createGoal(goalRequest).toResponse()
+    fun createGroup(
+        @Valid @RequestBody groupRequest: GroupRequest
+    ) = groupService.createGroup(groupRequest).toResponse()
 
     @GetMapping("/{id}")
-    fun getGoal(
+    fun getGroup(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
-    ) = goalService.getGoal(userDetails, id).toResponse()
+    ) = groupService.getGroup(userDetails, id).toResponse()
 
     @PatchMapping("/{id}")
-    fun editGoal(
+    fun editGroup(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID,
-        @Valid @RequestBody goalRequest: GoalRequest
-    ) = goalRequest.copy(id = id)
-        .run { goalService.editGoal(userDetails, this) }
+        @Valid @RequestBody groupRequest: GroupRequest
+    ) = groupRequest.copy(id = id)
+        .run { groupService.editGroup(userDetails, this) }
+        .toResponse()
 
     @DeleteMapping("/{id}")
-    fun removeGoal(
+    fun removeGroup(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
-    ) = goalService.removeGoal(userDetails, id).toResponse()
+    ) = groupService.removeGroup(userDetails, id).toResponse()
 }

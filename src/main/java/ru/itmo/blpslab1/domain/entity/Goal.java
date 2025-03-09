@@ -24,14 +24,17 @@ public class Goal {
     private String name;
 
     @Column(name = "target_sum", nullable = false)
+    @NotNull
     @Min(0)
     private Double targetSum;
 
     @Column(name = "current_sum", nullable = false)
+    @NotNull
     @Min(0)
     private Double currentSum;
 
     @ManyToOne
+    @NotNull
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
