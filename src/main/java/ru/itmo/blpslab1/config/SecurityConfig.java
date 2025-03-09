@@ -26,6 +26,7 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/api/users/auth").permitAll()
                                 .requestMatchers("/api/users/signup").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)

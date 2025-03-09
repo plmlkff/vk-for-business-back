@@ -31,6 +31,10 @@ public class Goal {
     @Min(0)
     private Double currentSum;
 
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    private Group group;
+
     @Column(nullable = false)
     @Version
     private Integer version;

@@ -61,6 +61,7 @@ create table goal
     name        varchar(128) not null,
     target_sum  float        not null,
     current_sum float        not null,
+    group_id    uuid         not null,
     version     integer      not null,
     constraint goal_target_sum_min_value_constr check ( goal.target_sum >= 0 ),
     constraint goal_current_sum_min_value_constr check ( goal.current_sum >= 0 ),

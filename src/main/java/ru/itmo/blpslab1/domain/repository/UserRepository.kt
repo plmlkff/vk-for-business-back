@@ -20,5 +20,5 @@ interface UserRepository : JpaRepository<User, UUID> {
     )
     fun findUserByLogin(@Param("login") login: String): User?
 
-    fun existsUserByLogin(@Param("login") login: String): Boolean
+    fun existsUserByLogin(login: String): Boolean
 }
