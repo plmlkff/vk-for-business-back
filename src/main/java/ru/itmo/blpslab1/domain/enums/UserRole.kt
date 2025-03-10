@@ -1,7 +1,6 @@
 package ru.itmo.blpslab1.domain.enums;
 
-enum class UserRole(
-     val roleName: String
-) {
-    ROLE_USER("ROLE_USER");
+enum class UserRole {
+    ROLE_USER,
+    ROLE_SUPER_ADMIN;
 }

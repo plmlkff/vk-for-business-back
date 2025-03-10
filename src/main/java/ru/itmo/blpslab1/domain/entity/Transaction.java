@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import ru.itmo.blpslab1.domain.enums.ActionType;
 import ru.itmo.blpslab1.domain.enums.TransactionType;
 
 import java.util.UUID;
@@ -22,6 +23,11 @@ public class Transaction {
     @Enumerated(EnumType.STRING)
     @NotNull
     private TransactionType transactionType;
+
+    @Column(name = "action_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private ActionType actionType;
 
     @Column(nullable = false)
     @NotNull

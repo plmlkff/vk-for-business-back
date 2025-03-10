@@ -1,5 +1,5 @@
 INSERT INTO user_role(id, name)
-VALUES (gen_random_uuid(), 'ROLE_USER'), (gen_random_uuid(), 'ROLE_ADMIN');
+VALUES (gen_random_uuid(), 'ROLE_USER');
 
 WITH role_user AS (SELECT id FROM user_role WHERE name='ROLE_USER')
 INSERT INTO user_authorities(role_id, authority)

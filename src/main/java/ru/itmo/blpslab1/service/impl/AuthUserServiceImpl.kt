@@ -47,7 +47,7 @@ class AuthUserServiceImpl(
         val passwordHash = SHA512HashUtil.hash(signUpRequest.password)
         val user = SignUpRequest.toDomain(signUpRequest)
         user.password = passwordHash
-        val role = userRoleRepository.findUserRoleByName(UserRole.ROLE_USER.roleName) ?: return error(I_AM_A_TEAPOT)
+        val role = userRoleRepository.findUserRoleByName(UserRole.ROLE_USER.name) ?: return error(I_AM_A_TEAPOT)
         user.roles = setOf(role)
 
         userRepository.save(user);
