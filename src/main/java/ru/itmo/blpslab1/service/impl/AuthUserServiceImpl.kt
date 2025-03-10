@@ -20,6 +20,7 @@ import ru.itmo.blpslab1.security.entity.JwtUserDetails
 import ru.itmo.blpslab1.service.AuthUserService
 import ru.itmo.blpslab1.utils.security.JwtUtil
 import ru.itmo.blpslab1.utils.security.SHA512HashUtil
+import ru.itmo.blpslab1.utils.service.*
 
 @Service
 class AuthUserServiceImpl(
@@ -29,24 +30,24 @@ class AuthUserServiceImpl(
 ): AuthUserService {
 
     @Transactional
-    override fun auth(@Valid authRequest: AuthRequest): Either<HttpStatus, AuthResponse> {
-        val user = userRepository.findUserByLogin(authRequest.login) ?: return NOT_FOUND.left()
+    override fun auth(@Valid authRequest: AuthRequest): Result<AuthResponse> {
+        val user = userRepository.findUserByLogin(authRequest.login) ?: return error(NOT_FOUND)
 
-        if (!SHA512HashUtil.compare(authRequest.password, user.password)) return UNAUTHORIZED.left()
+        if (!SHA512HashUtil.compare(authRequest.password, user.password)) return error(UNAUTHORIZED)
 
         val token = JwtUtil.createToken(JwtUserDetails.fromDomain(user), jwtProperties);
 
-        return AuthResponse.fromDomain(user, token).right()
+        return ok(AuthResponse.fromDomain(user, token))
     }
 
     @Transactional
-    override fun signUp(@Valid signUpRequest: SignUpRequest): Either<HttpStatus, SignUpResponse> {
-        if(userRepository.existsUserByLogin(signUpRequest.login)) return UNAUTHORIZED.left()
+    override fun signUp(@Valid signUpRequest: SignUpRequest): Result<SignUpResponse> {
+        if(userRepository.existsUserByLogin(signUpRequest.login)) return error(UNAUTHORIZED)
 
         val passwordHash = SHA512HashUtil.hash(signUpRequest.password)
         val user = SignUpRequest.toDomain(signUpRequest)
         user.password = passwordHash
-        val role = userRoleRepository.findUserRoleByName(UserRole.ROLE_USER.roleName) ?: return I_AM_A_TEAPOT.left()
+        val role = userRoleRepository.findUserRoleByName(UserRole.ROLE_USER.roleName) ?: return error(I_AM_A_TEAPOT)
         user.roles = setOf(role)
 
         userRepository.save(user);
@@ -54,6 +55,6 @@ class AuthUserServiceImpl(
         val userDetails = JwtUserDetails.fromDomain(user)
         val token = JwtUtil.createToken(userDetails, jwtProperties)
 
-        return SignUpResponse.fromDomain(user, token).right()
+        return ok(SignUpResponse.fromDomain(user, token))
     }
 }

@@ -1,14 +1,13 @@
 package ru.itmo.blpslab1.service;
 
-import arrow.core.Either
-import org.springframework.http.HttpStatus;
 import ru.itmo.blpslab1.rest.dto.request.AuthRequest;
 import ru.itmo.blpslab1.rest.dto.request.SignUpRequest;
 import ru.itmo.blpslab1.rest.dto.response.AuthResponse;
 import ru.itmo.blpslab1.rest.dto.response.SignUpResponse;
+import ru.itmo.blpslab1.utils.service.Result
 
 interface AuthUserService {
-    fun auth(authRequest: AuthRequest): Either<HttpStatus, AuthResponse>
+    fun auth(authRequest: AuthRequest): Result<AuthResponse>
 
-    fun signUp(signUpRequest: SignUpRequest): Either<HttpStatus, SignUpResponse>
+    fun signUp(signUpRequest: SignUpRequest): Result<SignUpResponse>
 }

@@ -1,18 +1,17 @@
 package ru.itmo.blpslab1.utils.core
 
-import arrow.core.Either
-import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import ru.itmo.blpslab1.domain.entity.Goal
 import ru.itmo.blpslab1.domain.entity.Group
 import ru.itmo.blpslab1.domain.enums.UserAuthority
+import ru.itmo.blpslab1.utils.service.Result
 import java.util.*
 
-fun Either<HttpStatus, *>.toResponse() = fold(
-    ifLeft = {left -> ResponseEntity.status(left).build()},
-    ifRight = {right -> ResponseEntity.ok(right)}
+fun Result<*>.toResponse() = fold(
+    ifError = {error -> ResponseEntity.status(error).build()},
+    ifOk = {body -> ResponseEntity.ok(body)}
 )
 
 private fun UserDetails.hasAccessTo(

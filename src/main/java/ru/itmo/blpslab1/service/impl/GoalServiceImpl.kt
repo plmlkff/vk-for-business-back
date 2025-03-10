@@ -1,9 +1,5 @@
 package ru.itmo.blpslab1.service.impl
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
@@ -16,6 +12,7 @@ import ru.itmo.blpslab1.rest.dto.response.toResponse
 import ru.itmo.blpslab1.service.GoalService
 import ru.itmo.blpslab1.utils.core.hasAccessTo
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
+import ru.itmo.blpslab1.utils.service.*
 import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
@@ -27,43 +24,43 @@ class GoalServiceImpl(
     @Transactional
     override fun createGoal(
         goalRequest: GoalRequest
-    ): Either<HttpStatus, GoalResponse> {
-        if (goalRequest.id != null) return BAD_REQUEST.left()
+    ): Result<GoalResponse> {
+        if (goalRequest.id != null) return error(BAD_REQUEST)
 
         val goal = goalRequest.toDomain()
 
-        return goalRepository.save(goal).toResponse().right()
+        return ok(goalRepository.save(goal).toResponse())
     }
 
     @Transactional
     override fun getGoal(
         userDetails: UserDetails, id: UUID
-    ): Either<HttpStatus, GoalResponse> {
-        val goal = goalRepository.findById(id).getOrNull() ?: return NOT_FOUND.left()
+    ): Result<GoalResponse> {
+        val goal = goalRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
 
-        return if (userDetails hasNoAccessTo goal) METHOD_NOT_ALLOWED.left()
-        else goal.toResponse().right()
+        return if (userDetails hasNoAccessTo goal) error(METHOD_NOT_ALLOWED)
+        else ok(goal.toResponse())
     }
 
     @Transactional
     override fun editGoal(
         userDetails: UserDetails, goalRequest: GoalRequest
-    ): Either<HttpStatus, GoalResponse> {
-        val goalId = goalRequest.id ?: return BAD_REQUEST.left()
+    ): Result<GoalResponse> {
+        val goalId = goalRequest.id ?: return error(BAD_REQUEST)
 
-        val dbGoal = goalRepository.findById(goalId).getOrNull() ?: return NOT_FOUND.left()
+        val dbGoal = goalRepository.findById(goalId).getOrNull() ?: return error(NOT_FOUND)
 
-        return if (userDetails hasNoAccessTo dbGoal) METHOD_NOT_ALLOWED.left()
-        else goalRepository.save(goalRequest.toDomain()).toResponse().right()
+        return if (userDetails hasNoAccessTo dbGoal) error(METHOD_NOT_ALLOWED)
+        else ok(goalRepository.save(goalRequest.toDomain()).toResponse())
     }
 
     @Transactional
     override fun removeGoal(
         userDetails: UserDetails, id: UUID
-    ): Either<HttpStatus, Unit> {
-        val dbGoal = goalRepository.findById(id).getOrNull() ?: return NOT_FOUND.left()
+    ): Result<Unit> {
+        val dbGoal = goalRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
 
-        return if (userDetails hasAccessTo dbGoal) goalRepository.delete(dbGoal).right()
-        else METHOD_NOT_ALLOWED.left()
+        return if (userDetails hasAccessTo dbGoal) ok(goalRepository.delete(dbGoal))
+        else error(METHOD_NOT_ALLOWED)
     }
 }

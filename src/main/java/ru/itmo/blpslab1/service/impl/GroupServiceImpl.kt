@@ -1,10 +1,5 @@
 package ru.itmo.blpslab1.service.impl
 
-import arrow.core.Either
-import arrow.core.left
-import arrow.core.right
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
-import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
@@ -19,11 +14,12 @@ import ru.itmo.blpslab1.rest.dto.response.toResponse
 import ru.itmo.blpslab1.service.GroupService
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
 import ru.itmo.blpslab1.utils.core.test
+import ru.itmo.blpslab1.utils.service.Result
+import ru.itmo.blpslab1.utils.service.*
 import java.util.UUID
 import kotlin.jvm.optionals.getOrNull
 
 @Service
-@SecurityRequirement(name = "JWT")
 class GroupServiceImpl(
     private val groupRepository: GroupRepository,
     private val userRepository: UserRepository
@@ -32,12 +28,12 @@ class GroupServiceImpl(
     @Transactional
     override fun createGroup(
         groupRequest: GroupRequest
-    ): Either<HttpStatus, GroupResponse>{
-        if (groupRequest.id != null) return BAD_REQUEST.left()
+    ): Result<GroupResponse> {
+        if (groupRequest.id != null) return error(BAD_REQUEST)
 
-        val newGroup = groupRequest.toFilledDomain() ?: return CONFLICT.left()
+        val newGroup = groupRequest.toFilledDomain() ?: return error(CONFLICT)
 
-        return groupRepository.save(newGroup).toResponse().right()
+        return ok(groupRepository.save(newGroup).toResponse())
     }
 
     @Transactional
@@ -46,26 +42,26 @@ class GroupServiceImpl(
     ) = groupRepository.findById(id).getOrNull().test(
         condition = { it != null },
         onTrue = { group ->
-            if (userDetails hasNoAccessTo group!!) METHOD_NOT_ALLOWED.left()
-            else group.toResponse().right()
+            if (userDetails hasNoAccessTo group!!) error(METHOD_NOT_ALLOWED)
+            else ok(group.toResponse())
         },
-        onFalse = { NOT_FOUND.left() }
+        onFalse = { error(NOT_FOUND) }
     )
 
     @Transactional
     override fun editGroup(
         userDetails: UserDetails,
         groupRequest: GroupRequest
-    ): Either<HttpStatus, GroupResponse> {
-        if (groupRequest.id == null) return BAD_REQUEST.left()
+    ): Result<GroupResponse> {
+        if (groupRequest.id == null) return error(BAD_REQUEST)
 
-        val dbGroup = groupRepository.findById(groupRequest.id).getOrNull() ?: return NOT_FOUND.left()
+        val dbGroup = groupRepository.findById(groupRequest.id).getOrNull() ?: return error(NOT_FOUND)
 
-        if (userDetails hasNoAccessTo dbGroup) return METHOD_NOT_ALLOWED.left()
+        if (userDetails hasNoAccessTo dbGroup) return error(METHOD_NOT_ALLOWED)
 
-        val newGroup = groupRequest.toFilledDomain() ?: return CONFLICT.left()
+        val newGroup = groupRequest.toFilledDomain() ?: return error(CONFLICT)
 
-        return groupRepository.save(newGroup).toResponse().right()
+        return ok(groupRepository.save(newGroup).toResponse())
     }
 
     @Transactional
@@ -74,10 +70,10 @@ class GroupServiceImpl(
     ) = groupRepository.findById(id).getOrNull().test(
         condition = { it != null },
         onTrue = { group ->
-            if (userDetails hasNoAccessTo group!!) METHOD_NOT_ALLOWED.left()
-            else groupRepository.delete(group).right()
+            if (userDetails hasNoAccessTo group!!) error(METHOD_NOT_ALLOWED)
+            else ok(groupRepository.delete(group))
         },
-        onFalse = { NOT_FOUND.left() }
+        onFalse = { error(NOT_FOUND) }
     )
 
     private fun GroupRequest.toFilledDomain(): Group?{
