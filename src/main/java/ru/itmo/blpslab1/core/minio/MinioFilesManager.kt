@@ -1,10 +1,7 @@
 package ru.itmo.blpslab1.core.minio
 
 import arrow.core.Either
-import io.minio.GetObjectArgs
-import io.minio.MinioClient
-import io.minio.PutObjectArgs
-import io.minio.RemoveObjectArgs
+import io.minio.*
 import org.springframework.stereotype.Component
 import java.io.ByteArrayInputStream
 import java.util.UUID
@@ -28,6 +25,7 @@ class MinioFilesManager(
     fun upload(
         fileName: String, fileBytes: ByteArray, bucketName: String
     ) = ByteArrayInputStream(fileBytes).let {
+        createBucketIfNotExist(bucketName)
         val uniqueFileName = makeUniqueFileName(fileName)
         ContinuableFileUploadTask(
             uniqueFileName = uniqueFileName,
@@ -51,6 +49,24 @@ class MinioFilesManager(
     }
 
     private fun makeUniqueFileName(name: String) = name + UUID.randomUUID()
+
+    private fun createBucketIfNotExist(
+        bucketName: String
+    ) = try {
+        val existRes = minioClient.bucketExists(
+            BucketExistsArgs.builder()
+                .bucket(bucketName)
+                .build()
+        )
+        if (existRes) Unit
+        else minioClient.makeBucket(
+            MakeBucketArgs.builder()
+                .bucket(bucketName)
+                .build()
+        )
+    } catch (e: Exception) {
+        throw RuntimeException()
+    }
 
     inner class ContinuableFileUploadTask internal constructor(
         val uniqueFileName: String,

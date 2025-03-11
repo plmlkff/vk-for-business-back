@@ -15,7 +15,7 @@ class UserImageServiceImpl(
         imageRequest: ImageRequest
     ) = try {
         minioFilesManager.upload(imageRequest.name, imageRequest.bytes, minioConfig.bucket)
-    } catch (e: Throwable) {
+    } catch (e: Exception) {
         throw RollbackTransactionException(HttpStatus.SERVICE_UNAVAILABLE)
     }
 
@@ -23,7 +23,7 @@ class UserImageServiceImpl(
         name: String
     ) = try {
         minioFilesManager.getByName(name, minioConfig.bucket)
-    } catch (e: Throwable) {
+    } catch (e: Exception) {
         throw RollbackTransactionException(HttpStatus.SERVICE_UNAVAILABLE)
     }
 
@@ -32,7 +32,7 @@ class UserImageServiceImpl(
     ) = try {
         if (name == null) Unit
         else minioFilesManager.remove(name, minioConfig.bucket)
-    } catch (e: Throwable) {
+    } catch (e: Exception) {
         throw RollbackTransactionException(HttpStatus.SERVICE_UNAVAILABLE)
     }
 
@@ -46,7 +46,7 @@ class UserImageServiceImpl(
         continuable.`continue`()
 
         continuable.uniqueFileName
-    } catch (e: Throwable) {
+    } catch (e: Exception) {
         throw RollbackTransactionException(HttpStatus.SERVICE_UNAVAILABLE)
     }
 }
