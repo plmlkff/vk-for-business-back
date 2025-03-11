@@ -8,7 +8,7 @@ data class PromotionTaskResponse(
     val id: UUID,
     val subject: String,
     val body: String,
-    var image: String? = null,
+    val image: ByteArray? = null,
     val promotionType: PromotionType,
     val group: GroupResponse
 )

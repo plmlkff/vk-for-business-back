@@ -35,7 +35,10 @@ class ServiceInterceptor(
         } catch (e: Throwable) {
             return when (e) {
                 is RollbackTransactionException -> error<Unit>(e.status)
-                else -> return error<Unit>(HttpStatus.INTERNAL_SERVER_ERROR)
+                else -> {
+                    logger.error(e.toString())
+                    return error<Unit>(HttpStatus.INTERNAL_SERVER_ERROR)
+                }
             }
         }
     }

@@ -1,8 +1,10 @@
 package ru.itmo.blpslab1.core.minio
 
+import arrow.core.Either
 import io.minio.GetObjectArgs
 import io.minio.MinioClient
 import io.minio.PutObjectArgs
+import io.minio.RemoveObjectArgs
 import org.springframework.stereotype.Component
 import java.io.ByteArrayInputStream
 import java.util.UUID
@@ -27,15 +29,33 @@ class MinioFilesManager(
         fileName: String, fileBytes: ByteArray, bucketName: String
     ) = ByteArrayInputStream(fileBytes).let {
         val uniqueFileName = makeUniqueFileName(fileName)
-        minioClient.putObject(
-            PutObjectArgs.builder()
+        ContinuableFileUploadTask(
+            uniqueFileName = uniqueFileName,
+            args = PutObjectArgs.builder()
                 .bucket(bucketName)
                 .stream(it, it.available().toLong(), -1)
                 .`object`(uniqueFileName)
                 .build()
         )
-        uniqueFileName
+    }
+
+    fun remove(
+        fileName: String, bucketName: String
+    ) = check(fileName.length > UUID_LENGTH).let {
+        minioClient.removeObject(
+            RemoveObjectArgs.builder()
+                .bucket(bucketName)
+                .`object`(fileName)
+                .build()
+        )
     }
 
     private fun makeUniqueFileName(name: String) = name + UUID.randomUUID()
+
+    inner class ContinuableFileUploadTask internal constructor(
+        val uniqueFileName: String,
+        val args: PutObjectArgs
+    ) {
+        fun `continue`() = Either.catch { minioClient.putObject(args) }
+    }
 }

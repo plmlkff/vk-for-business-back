@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.repository.GroupRepository
 import ru.itmo.blpslab1.domain.repository.PromotionTaskRepository
-import ru.itmo.blpslab1.domain.repository.UserRepository
 import ru.itmo.blpslab1.rest.dto.request.PromotionTaskRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.PromotionTaskResponse
 import ru.itmo.blpslab1.service.PromotionTaskService
+import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
 import ru.itmo.blpslab1.service.minio.UserImageService
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
 import ru.itmo.blpslab1.utils.service.Result
@@ -28,38 +28,71 @@ class PromotionTaskServiceImpl(
     @Transactional
     override fun createPromotionTask(
         userDetails: UserDetails,
-        promotionTaskRequest: PromotionTaskRequest
+        request: PromotionTaskRequest
     ): Result<PromotionTaskResponse> {
-        if (promotionTaskRequest.id != null) return error()
+        if (request.id != null) return error()
 
-        val dbGroup = groupRepository.findById(promotionTaskRequest.groupId).getOrNull() ?: return error(NOT_FOUND)
+        val dbGroup = groupRepository.findById(request.groupId).getOrNull() ?: return error(NOT_FOUND)
 
         if (userDetails hasNoAccessTo dbGroup) return error(METHOD_NOT_ALLOWED)
 
-        val imageRequest = promotionTaskRequest.image
-        val dbImageName = userImageService.saveImage(imageRequest.name, imageRequest.bytes).getOrNull() ?: return error()
-
-        val promotionTask = promotionTaskRequest.toDomain()
-        promotionTask.apply {
-            group = dbGroup
-            imageName = dbImageName
+        if(request.image == null) {
+            val promotionTask = promotionTaskRepository.save(request.toDomain())
+            return ok(promotionTask.apply { group = dbGroup }.toResponse())
         }
 
-        return ok(promotionTaskRepository.save(promotionTask).toResponse())
+        val uploadImageContinuable = userImageService.saveImage(request.image)
+
+        val promotionTask = request.toDomain().apply {
+            group = dbGroup
+            imageName = uploadImageContinuable.uniqueFileName
+        }
+
+        promotionTaskRepository.save(promotionTask)
+
+        uploadImageContinuable.`continue`().getOrNull() ?: throw RollbackTransactionException(SERVICE_UNAVAILABLE)
+
+        return ok(promotionTask.toResponse())
     }
 
     override fun getPromotionTask(userDetails: UserDetails, id: UUID): Result<PromotionTaskResponse> {
-        TODO("Not yet implemented")
+        val promotionTask = promotionTaskRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
+
+        promotionTask.imageName ?: return ok(promotionTask.toResponse())
+
+        val dbImage = userImageService.getImage(promotionTask.imageName) ?: return error(SERVICE_UNAVAILABLE)
+
+        return ok(promotionTask.toResponse().copy(image = dbImage))
     }
 
+    @Transactional
     override fun editPromotionTask(
         userDetails: UserDetails,
-        promotionTaskRequest: PromotionTaskRequest
+        request: PromotionTaskRequest
     ): Result<PromotionTaskResponse> {
-        TODO("Not yet implemented")
+        request.id ?: return error()
+
+        val dbPromotionTask = promotionTaskRepository.findById(request.id).getOrNull() ?: return error(NOT_FOUND)
+
+        if (userDetails hasNoAccessTo dbPromotionTask.group) return error(METHOD_NOT_ALLOWED)
+
+        val res = promotionTaskRepository.save(request.toDomain().apply { group = dbPromotionTask.group })
+
+        if (request.image == null) return ok(res.toResponse())
+
+        val newImageName = userImageService.updateImage(request.image, dbPromotionTask.imageName)
+
+        return ok(promotionTaskRepository.save(res.apply { imageName = newImageName }).toResponse())
     }
 
+    @Transactional
     override fun removePromotionTask(userDetails: UserDetails, id: UUID): Result<Unit> {
-        TODO("Not yet implemented")
+        val promotionTask = promotionTaskRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
+
+        promotionTaskRepository.delete(promotionTask)
+
+        userImageService.removeImage(promotionTask.imageName)
+
+        return ok()
     }
 }

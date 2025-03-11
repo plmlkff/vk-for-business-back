@@ -42,6 +42,10 @@ infix fun UserDetails.hasNoAccessTo(
     cardCredential: CardCredential
 ) = !(this hasAccessTo cardCredential)
 
+infix fun UserDetails.hasAuthority(
+    authority: UserAuthority
+) = authority in authorities
+
 inline fun <T, U> T.test(
     condition: (T) -> Boolean,
     onTrue: (T) -> U,
