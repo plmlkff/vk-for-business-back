@@ -8,7 +8,7 @@ data class PromotionTaskRequest(
     val id: UUID?,
     val subject: String,
     val body: String,
-    val image: String?,
+    val image: ImageRequest,
     val promotionType: PromotionType,
     val groupId: UUID
 )
