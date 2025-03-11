@@ -2,12 +2,13 @@ all: up
 
 .PHONY: up, down, db
 
-up:
+up: down
+	./gradlew clean
 	./gradlew bootJar
-	docker-compose up -d
+	docker-compose up --build -d
 
 down:
 	docker-compose down
 
-db:
+db: down
 	docker-compose up -d postgres
