@@ -46,4 +46,7 @@ public class User {
 
     @OneToMany(mappedBy = Group.Fields.OWNER, cascade = CascadeType.ALL)
     private Set<Group> groups;
+
+    @OneToMany(mappedBy = Subscription.Fields.OWNER, cascade = CascadeType.ALL)
+    private Set<Subscription> subscriptions;
 }

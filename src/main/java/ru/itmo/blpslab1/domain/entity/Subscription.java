@@ -25,19 +25,23 @@ public class Subscription {
     @NotNull
     private Date to;
 
+    @Column(name = "is_paid", nullable = false)
+    @NotNull
+    private boolean isPaid = false;
+
     @ManyToOne
-    @JoinColumn(name = "tariff_id")
+    @JoinColumn(name = "tariff_id", nullable = false)
     @NotNull
     private Tariff tariff;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     @NotNull
-    private Group group;
+    private User owner;
 
     public interface Fields{
         String TARIFF = "tariff";
 
-        String GROUP = "group";
+        String OWNER = "owner";
     }
 }

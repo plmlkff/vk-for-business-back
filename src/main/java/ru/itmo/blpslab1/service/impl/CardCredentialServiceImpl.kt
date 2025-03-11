@@ -3,6 +3,7 @@ package ru.itmo.blpslab1.service.impl
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
 import ru.itmo.blpslab1.rest.dto.request.CardCredentialRequest
@@ -10,8 +11,8 @@ import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.CardCredentialResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
 import ru.itmo.blpslab1.service.CardCredentialService
-import ru.itmo.blpslab1.utils.core.hasAccessTo
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
+import ru.itmo.blpslab1.utils.core.hasNoAuthority
 import ru.itmo.blpslab1.utils.core.test
 import java.util.UUID
 import ru.itmo.blpslab1.utils.service.*
@@ -30,7 +31,8 @@ class CardCredentialServiceImpl(
 
         val owner = userRepository.findById(cardCredentialRequest.ownerId).getOrNull() ?: return error(HttpStatus.NOT_FOUND)
 
-        if (!userDetails.username.equals(owner.login)) return error(HttpStatus.METHOD_NOT_ALLOWED)
+        if (!userDetails.username.equals(owner.login)
+            && userDetails hasNoAuthority UserAuthority.CARD_CREDENTIAL_ADMIN) return error(HttpStatus.METHOD_NOT_ALLOWED)
 
         val newCardCredential = cardCredentialRequest.toDomain().also { it.owner = owner }
 
@@ -57,6 +59,9 @@ class CardCredentialServiceImpl(
         val dbCardCredential = cardCredentialRepository.findById(cardCredentialRequest.id).getOrNull() ?: return error(HttpStatus.NOT_FOUND)
 
         if (userDetails hasNoAccessTo dbCardCredential) return error(HttpStatus.METHOD_NOT_ALLOWED)
+
+        if (!dbCardCredential.owner.login.equals(userDetails.username)
+            && userDetails hasNoAuthority UserAuthority.CARD_CREDENTIAL_ADMIN) return error(HttpStatus.METHOD_NOT_ALLOWED)
 
         val newCardCredential = cardCredentialRequest.toFilledDomain() ?: return error(HttpStatus.NOT_FOUND)
 

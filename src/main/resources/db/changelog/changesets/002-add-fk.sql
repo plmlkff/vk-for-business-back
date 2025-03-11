@@ -8,7 +8,7 @@ alter table if exists promotion_task
     add constraint promotion_task_group_id_fk foreign key (group_id) references community_group;
 
 alter table if exists subscription
-    add constraint subscription_group_id_fk foreign key (group_id) references community_group;
+    add constraint subscription_owner_id_fk foreign key (owner_id) references person;
 
 alter table if exists subscription
     add constraint subscription_tariff_id_fk foreign key (tariff_id) references tariff;

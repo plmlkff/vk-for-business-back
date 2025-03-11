@@ -41,9 +41,6 @@ public class Group {
     @OneToMany(mappedBy = Goal.Fields.GROUP, cascade = CascadeType.ALL)
     private Set<Goal> goals;
 
-    @OneToMany(mappedBy = Subscription.Fields.GROUP, cascade = CascadeType.ALL)
-    private Set<Subscription> subscriptions;
-
     public interface Fields{
         String OWNER = "owner";
     }

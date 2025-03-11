@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import ru.itmo.blpslab1.domain.entity.CardCredential
 import ru.itmo.blpslab1.domain.entity.Goal
 import ru.itmo.blpslab1.domain.entity.Group
+import ru.itmo.blpslab1.domain.entity.Subscription
 import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.utils.service.Result
 import java.util.*
@@ -42,9 +43,21 @@ infix fun UserDetails.hasNoAccessTo(
     cardCredential: CardCredential
 ) = !(this hasAccessTo cardCredential)
 
+infix fun UserDetails.hasAccessTo(
+    subscription: Subscription
+) = hasAccessTo(subscription.owner.login, UserAuthority.SUBSCRIPTION_ADMIN)
+
+infix fun UserDetails.hasNoAccessTo(
+    subscription: Subscription
+) = !(this hasAccessTo subscription)
+
 infix fun UserDetails.hasAuthority(
     authority: UserAuthority
 ) = authority in authorities
+
+infix fun UserDetails.hasNoAuthority(
+    authority: UserAuthority
+) = !(this hasAuthority authority)
 
 inline fun <T, U> T.test(
     condition: (T) -> Boolean,

@@ -34,6 +34,10 @@ public class Transaction {
     @Min(0)
     private Double amount;
 
+    @Column(name = "target_entity_id", nullable = false)
+    @NotNull
+    private UUID targetEntityId;
+
     @ManyToOne
     @JoinColumn(name = "payer_id", nullable = false)
     @NotNull
