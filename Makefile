@@ -10,5 +10,8 @@ up: down
 down:
 	docker-compose down
 
-db: down
+db:
 	docker-compose up -d postgres
+
+minio:
+	docker-compose up -d minio

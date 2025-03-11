@@ -54,6 +54,7 @@ dependencies {
     implementation("io.arrow-kt:arrow-core:1.2.1")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
+    implementation("io.minio:minio:8.5.10")
 }
 
 tasks.withType<Test> {
