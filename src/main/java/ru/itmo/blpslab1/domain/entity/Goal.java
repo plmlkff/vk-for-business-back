@@ -41,4 +41,8 @@ public class Goal {
     @Column(nullable = false)
     @Version
     private Integer version;
+
+    public interface Fields{
+        String GROUP = "group";
+    }
 }

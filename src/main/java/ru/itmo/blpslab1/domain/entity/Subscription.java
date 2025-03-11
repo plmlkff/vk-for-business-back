@@ -34,4 +34,10 @@ public class Subscription {
     @JoinColumn(name = "group_id")
     @NotNull
     private Group group;
+
+    public interface Fields{
+        String TARIFF = "tariff";
+
+        String GROUP = "group";
+    }
 }

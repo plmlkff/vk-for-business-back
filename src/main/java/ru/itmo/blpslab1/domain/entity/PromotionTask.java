@@ -40,4 +40,8 @@ public class PromotionTask {
     @JoinColumn(name = "group_id", nullable = false)
     @NotNull
     private Group group;
+
+    public interface Fields{
+        String GROUP = "group";
+    }
 }

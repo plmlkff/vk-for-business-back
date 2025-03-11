@@ -40,4 +40,10 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<UserRole> roles;
+
+    @OneToMany(mappedBy = CardCredential.Fields.OWNER, cascade = CascadeType.ALL)
+    private Set<CardCredential> credentials;
+
+    @OneToMany(mappedBy = Group.Fields.OWNER, cascade = CascadeType.ALL)
+    private Set<Group> groups;
 }

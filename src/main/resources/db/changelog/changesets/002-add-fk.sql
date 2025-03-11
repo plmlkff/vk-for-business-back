@@ -16,15 +16,6 @@ alter table if exists subscription
 alter table if exists tariff
     add constraint tariff_group_id_fk foreign key (group_id) references community_group;
 
-alter table if exists transaction
-    add constraint transaction_payer_id_fk foreign key (payer_id) references person;
-
-alter table if exists transaction
-    add constraint transaction_payer_card_id_fk foreign key (payer_card_id) references card_credential;
-
-alter table if exists transaction
-    add constraint transaction_recipient_card_id_fk foreign key (recipient_card_id) references card_credential;
-
 alter table if exists goal
     add constraint goal_group_id_fk foreign key (group_id) references person;
 

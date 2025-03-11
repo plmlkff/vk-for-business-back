@@ -27,11 +27,24 @@ public class Group {
     @NotNull
     private User owner;
 
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(
             name = "user_to_group",
             joinColumns = @JoinColumn(name = "group_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private Set<User> subscribers;
+
+    @OneToMany(mappedBy = PromotionTask.Fields.GROUP, cascade = CascadeType.ALL)
+    private Set<PromotionTask> promotionTasks;
+
+    @OneToMany(mappedBy = Goal.Fields.GROUP, cascade = CascadeType.ALL)
+    private Set<Goal> goals;
+
+    @OneToMany(mappedBy = Subscription.Fields.GROUP, cascade = CascadeType.ALL)
+    private Set<Subscription> subscriptions;
+
+    public interface Fields{
+        String OWNER = "owner";
+    }
 }

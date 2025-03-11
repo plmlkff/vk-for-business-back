@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -36,4 +37,8 @@ public class CardCredential {
     @JoinColumn(name = "owner_id", nullable = false)
     @NotNull
     private User owner;
+
+    interface Fields{
+        String OWNER = "owner";
+    }
 }

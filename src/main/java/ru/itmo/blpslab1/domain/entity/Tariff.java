@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "tariff")
@@ -34,4 +35,6 @@ public class Tariff {
     @NotNull
     private Group group;
 
+    @OneToMany(mappedBy = Subscription.Fields.TARIFF, cascade = CascadeType.ALL)
+    private Set<Subscription> subscriptions;
 }
