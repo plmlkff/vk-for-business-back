@@ -40,8 +40,7 @@ class PromotionTaskController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID,
         @Valid @RequestBody promotionTaskRequest: PromotionTaskRequest
-    ) = promotionTaskRequest.copy(id = id)
-        .let{ promotionTaskService.editPromotionTask(userDetails, it) }
+    ) = promotionTaskService.editPromotionTask(userDetails, promotionTaskRequest.copy(id= id))
 
     @DeleteMapping("/{id}")
     fun removePromotionTask(

@@ -39,15 +39,16 @@ class PromotionTaskServiceImpl(
 
         if (userDetails hasNoAccessTo dbGroup) return error(METHOD_NOT_ALLOWED)
 
+        var promotionTask = request.toDomain().apply { group = dbGroup }
+
         if(request.image == null) {
-            val promotionTask = promotionTaskRepository.save(request.toDomain())
-            return ok(promotionTask.apply { group = dbGroup }.toResponse())
+            promotionTask = promotionTaskRepository.save(promotionTask)
+            return ok(promotionTask.toResponse())
         }
 
         val uploadImageContinuable = userImageService.saveImage(request.image)
 
-        val promotionTask = request.toDomain().apply {
-            group = dbGroup
+        promotionTask = request.toDomain().apply {
             imageName = uploadImageContinuable.uniqueFileName
         }
 
@@ -60,6 +61,8 @@ class PromotionTaskServiceImpl(
 
     override fun getPromotionTask(userDetails: UserDetails, id: UUID): Result<PromotionTaskResponse> {
         val promotionTask = promotionTaskRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
+
+        if (userDetails hasNoAccessTo promotionTask.group)
 
         promotionTask.imageName ?: return ok(promotionTask.toResponse())
 
@@ -75,25 +78,29 @@ class PromotionTaskServiceImpl(
     ): Result<PromotionTaskResponse> {
         request.id ?: return error()
 
-        val dbPromotionTask = promotionTaskRepository.findById(request.id).getOrNull() ?: return error(NOT_FOUND)
+        var dbPromotionTask = promotionTaskRepository.findById(request.id).getOrNull() ?: return error(NOT_FOUND)
 
         if (userDetails hasNoAccessTo dbPromotionTask.group) return error(METHOD_NOT_ALLOWED)
 
-        val res = promotionTaskRepository.save(request.toDomain().apply { group = dbPromotionTask.group })
+        dbPromotionTask = promotionTaskRepository.save(request.toDomain().apply { group = dbPromotionTask.group })
 
-        if (request.image == null) return ok(res.toResponse())
+        if (request.image == null) return ok(dbPromotionTask.toResponse())
 
         val newImageName = userImageService.updateImage(request.image, dbPromotionTask.imageName)
 
-        return ok(promotionTaskRepository.save(res.apply { imageName = newImageName }).toResponse())
+        return ok(promotionTaskRepository.save(dbPromotionTask.apply { imageName = newImageName }).toResponse())
     }
 
     @Transactional
-    override fun removePromotionTask(userDetails: UserDetails, id: UUID) = promotionTaskRepository.findById(id).getOrNull().test(
-        condition = {it != null},
+    override fun removePromotionTask(
+        userDetails: UserDetails,
+        id: UUID
+    ) = promotionTaskRepository.findById(id).getOrNull().test(
+        condition = { it != null },
         onTrue = {
-            promotionTaskRepository.delete(it!!)
+            if (userDetails hasNoAccessTo it!!.group) return@test error(METHOD_NOT_ALLOWED)
 
+            promotionTaskRepository.delete(it)
             ok(userImageService.removeImage(it.imageName))
         },
         onFalse = { error(NOT_FOUND) }
