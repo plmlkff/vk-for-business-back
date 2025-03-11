@@ -3,13 +3,14 @@ create table card_credential
     id          uuid         primary key,
     cvv         smallint     not null,
     end_date    timestamp(6) not null,
-    card_number varchar(16)  not null
+    card_number varchar(16)  not null,
+    owner_id    uuid         not null
 );
 
 create table community_group
 (
     id       uuid         primary key,
-    owner_id uuid,
+    owner_id uuid         not null,
     name     varchar(255) not null
 );
 
@@ -71,7 +72,7 @@ create table goal
 create table user_authorities
 (
     role_id   uuid not null,
-    authority varchar(255)
+    authority varchar(255) unique not null
 );
 
 create table person
@@ -85,7 +86,7 @@ create table person
 create table user_role
 (
     id   uuid         primary key,
-    name varchar(255) not null
+    name varchar(255) not null unique
 );
 
 create table user_to_group

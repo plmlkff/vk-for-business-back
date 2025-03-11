@@ -31,4 +31,9 @@ public class CardCredential {
     @Column(nullable = false)
     @NotNull
     private Short cvv;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    @NotNull
+    private User owner;
 }

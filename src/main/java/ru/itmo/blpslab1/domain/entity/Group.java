@@ -23,7 +23,8 @@ public class Group {
     private String name;
 
     @ManyToOne
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = false)
+    @NotNull
     private User owner;
 
     @ManyToMany(fetch = FetchType.LAZY)

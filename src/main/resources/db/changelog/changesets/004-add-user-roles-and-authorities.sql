@@ -7,10 +7,8 @@ VALUES ((SELECT id FROM role_user), 'GROUP_CREATE'),
        ((SELECT id FROM role_user), 'GROUP_VIEW'),
        ((SELECT id FROM role_user), 'GROUP_EDIT'),
        ((SELECT id FROM role_user), 'GROUP_DELETE'),
-       ((SELECT id FROM role_user), 'GROUP_ADMIN'),
 
        ((SELECT id FROM role_user), 'GOAL_CREATE'),
        ((SELECT id FROM role_user), 'GOAL_VIEW'),
        ((SELECT id FROM role_user), 'GOAL_EDIT'),
-       ((SELECT id FROM role_user), 'GOAL_DELETE'),
-       ((SELECT id FROM role_user), 'GOAL_ADMIN');
+       ((SELECT id FROM role_user), 'GOAL_DELETE');

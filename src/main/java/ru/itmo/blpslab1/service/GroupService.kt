@@ -9,7 +9,7 @@ import java.util.UUID
 
 interface GroupService {
     @PreAuthorize("hasAnyAuthority('GROUP_CREATE', 'GROUP_ADMIN')")
-    fun createGroup(groupRequest: GroupRequest): Result<GroupResponse>
+    fun createGroup(userDetails: UserDetails, groupRequest: GroupRequest): Result<GroupResponse>
 
     @PreAuthorize("hasAnyAuthority('GROUP_VIEW', 'GROUP_ADMIN')")
     fun getGroup(userDetails: UserDetails, id: UUID): Result<GroupResponse>

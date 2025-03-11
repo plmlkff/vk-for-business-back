@@ -1,3 +1,6 @@
+alter table if exists card_credential
+    add constraint card_credential_owner_id_fk foreign key (owner_id) references person;
+
 alter table if exists community_group
     add constraint community_group_owner_id_fk foreign key (owner_id) references person;
 

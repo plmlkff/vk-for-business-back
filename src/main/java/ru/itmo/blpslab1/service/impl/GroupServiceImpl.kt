@@ -27,9 +27,14 @@ class GroupServiceImpl(
 
     @Transactional
     override fun createGroup(
+        userDetails: UserDetails,
         groupRequest: GroupRequest
     ): Result<GroupResponse> {
         if (groupRequest.id != null) return error(BAD_REQUEST)
+
+        val owner = userRepository.findById(groupRequest.ownerId).getOrNull() ?: return error(NOT_FOUND)
+
+        if (!userDetails.username.equals(owner.login)) return error(METHOD_NOT_ALLOWED)
 
         val newGroup = groupRequest.toFilledDomain() ?: return error(CONFLICT)
 

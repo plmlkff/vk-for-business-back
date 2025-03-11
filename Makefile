@@ -1,6 +1,6 @@
 all: up
 
-.PHONY: up, down
+.PHONY: up, down, db
 
 up:
 	./gradlew bootJar
