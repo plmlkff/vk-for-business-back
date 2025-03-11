@@ -11,7 +11,13 @@ class GlobalControllerAdvice {
 
     @ExceptionHandler(HttpMessageNotReadableException::class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    fun onHttpMessageNotReadableException(exception: HttpMessageNotReadableException): String?{
+    fun onHttpMessageNotReadableException(exception: HttpMessageNotReadableException): String {
         return "Json parser error"
     }
+
+//    @ExceptionHandler(Throwable::class)
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    fun onUnknownOthers(exception: Throwable): String {
+//        return "Internal server error"
+//    }
 }

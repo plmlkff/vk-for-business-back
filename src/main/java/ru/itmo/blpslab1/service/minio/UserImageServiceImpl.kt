@@ -28,19 +28,20 @@ class UserImageServiceImpl(
     }
 
     override fun removeImage(
-        name: String
+        name: String?
     ) = try {
-        minioFilesManager.remove(name, minioConfig.bucket)
+        if (name == null) Unit
+        else minioFilesManager.remove(name, minioConfig.bucket)
     } catch (e: Throwable) {
         throw RollbackTransactionException(HttpStatus.SERVICE_UNAVAILABLE)
     }
 
     override fun updateImage(
-        imageRequest: ImageRequest, oldImageUniqueName: String?
+        newImage: ImageRequest, oldImageUniqueName: String?
     ) = try {
         if (oldImageUniqueName != null) minioFilesManager.remove(oldImageUniqueName, minioConfig.bucket)
 
-        val continuable = minioFilesManager.upload(imageRequest.name, imageRequest.bytes, minioConfig.bucket)
+        val continuable = minioFilesManager.upload(newImage.name, newImage.bytes, minioConfig.bucket)
 
         continuable.`continue`()
 

@@ -9,6 +9,7 @@ data class PromotionTaskResponse(
     val subject: String,
     val body: String,
     val image: ByteArray? = null,
+    val isApproved: Boolean,
     val promotionType: PromotionType,
     val group: GroupResponse
 )
@@ -18,5 +19,6 @@ fun PromotionTask.toResponse() = PromotionTaskResponse(
     subject = subject,
     body = body,
     promotionType = promotionType,
+    isApproved = isApproved,
     group = group.toResponse()
 )

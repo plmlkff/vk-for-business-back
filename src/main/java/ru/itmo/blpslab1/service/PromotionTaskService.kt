@@ -8,11 +8,10 @@ import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
 
 interface PromotionTaskService {
-
     @PreAuthorize("hasAnyAuthority('PROMOTION_TASK_CREATE', 'PROMOTION_TASK_ADMIN')")
     fun createPromotionTask(
         userDetails: UserDetails,
-        promotionTaskRequest: PromotionTaskRequest
+        request: PromotionTaskRequest
     ): Result<PromotionTaskResponse>
 
     @PreAuthorize("hasAnyAuthority('PROMOTION_TASK_VIEW', 'PROMOTION_TASK_ADMIN')")
@@ -24,7 +23,7 @@ interface PromotionTaskService {
     @PreAuthorize("hasAnyAuthority('PROMOTION_TASK_EDIT', 'PROMOTION_TASK_ADMIN')")
     fun editPromotionTask(
         userDetails: UserDetails,
-        promotionTaskRequest: PromotionTaskRequest
+        request: PromotionTaskRequest
     ): Result<PromotionTaskResponse>
 
     @PreAuthorize("hasAnyAuthority('PROMOTION_TASK_DELETE', 'PROMOTION_TASK_ADMIN')")
@@ -32,4 +31,10 @@ interface PromotionTaskService {
         userDetails: UserDetails,
         id: UUID
     ): Result<Unit>
+
+    @PreAuthorize("hasAnyAuthority('PROMOTION_TASK_ADMIN')")
+    fun approvePromotionTask(
+        userDetails: UserDetails,
+        id: UUID
+    ): Result<PromotionTaskResponse>
 }

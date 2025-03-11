@@ -8,7 +8,7 @@ interface UserImageService {
 
     fun getImage(name: String): ByteArray?
 
-    fun removeImage(name: String)
+    fun removeImage(name: String?)
 
     fun updateImage(newImage: ImageRequest, oldImageUniqueName: String?): String
 }

@@ -1,3 +1,5 @@
+package ru.itmo.blpslab1.service.impl
+
 import ru.itmo.blpslab1.rest.dto.response.toResponse
 
 import org.springframework.http.HttpStatus.*
@@ -13,6 +15,7 @@ import ru.itmo.blpslab1.service.PromotionTaskService
 import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
 import ru.itmo.blpslab1.service.minio.UserImageService
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
+import ru.itmo.blpslab1.utils.core.test
 import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
 import ru.itmo.blpslab1.utils.service.*
@@ -86,13 +89,20 @@ class PromotionTaskServiceImpl(
     }
 
     @Transactional
-    override fun removePromotionTask(userDetails: UserDetails, id: UUID): Result<Unit> {
-        val promotionTask = promotionTaskRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
+    override fun removePromotionTask(userDetails: UserDetails, id: UUID) = promotionTaskRepository.findById(id).getOrNull().test(
+        condition = {it != null},
+        onTrue = {
+            promotionTaskRepository.delete(it!!)
 
-        promotionTaskRepository.delete(promotionTask)
+            ok(userImageService.removeImage(it.imageName))
+        },
+        onFalse = { error(NOT_FOUND) }
+    )
 
-        userImageService.removeImage(promotionTask.imageName)
-
-        return ok()
-    }
+    @Transactional
+    override fun approvePromotionTask(userDetails: UserDetails, id: UUID) = promotionTaskRepository.findById(id).getOrNull().test(
+        condition = {it != null},
+        onTrue = { ok(promotionTaskRepository.save(it!!.apply { isApproved = true }).toResponse()) },
+        onFalse = { error(NOT_FOUND) }
+    )
 }
