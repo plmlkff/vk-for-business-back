@@ -64,3 +64,7 @@ inline fun <T, U> T.test(
     onTrue: (T) -> U,
     onFalse: (T) -> U
 ) = if (condition(this)) onTrue(this) else onFalse(this)
+
+fun isEmpty(collection: Collection<*>?) = collection == null || collection.isEmpty()
+
+fun isNotEmpty(collection: Collection<*>?) = !isEmpty(collection)

@@ -7,11 +7,11 @@ import java.util.UUID
 
 data class GoalRequest(
     val id: UUID?,
-    @Size(min = 1)
+    @field:Size(min = 1)
     val name: String,
-    @Min(0)
+    @field:Min(0)
     val targetSum: Double,
-    @Min(0)
+    @field:Min(0)
     val currentSum: Double
 )
 

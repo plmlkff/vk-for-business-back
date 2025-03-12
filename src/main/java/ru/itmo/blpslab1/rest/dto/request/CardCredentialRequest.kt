@@ -7,7 +7,7 @@ import java.util.UUID
 
 data class CardCredentialRequest(
     val id: UUID?,
-    @CreditCardNumber
+    @field:CreditCardNumber
     val cardNumber: String,
     val endDate: Date,
     val cvv: Short,

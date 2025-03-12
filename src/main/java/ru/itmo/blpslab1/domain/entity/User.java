@@ -49,4 +49,9 @@ public class User {
 
     @OneToMany(mappedBy = Subscription.Fields.OWNER, cascade = CascadeType.ALL)
     private Set<Subscription> subscriptions;
+
+    public interface Fields{
+        String ID = "id";
+        String ROLES = "roles";
+    }
 }

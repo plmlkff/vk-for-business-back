@@ -42,6 +42,9 @@ public class PromotionTask {
     private Group group;
 
     public interface Fields{
+        String ID = "id";
         String GROUP = "group";
+        String IS_APPROVED ="isApproved";
+        String PROMOTION_TYPE = "promotionType";
     }
 }

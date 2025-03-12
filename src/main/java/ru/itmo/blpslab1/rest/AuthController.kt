@@ -1,17 +1,17 @@
 package ru.itmo.blpslab1.rest;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import ru.itmo.blpslab1.rest.dto.request.AuthRequest
 import ru.itmo.blpslab1.rest.dto.request.SignUpRequest
+import ru.itmo.blpslab1.rest.dto.request.query.UserQuery
 import ru.itmo.blpslab1.service.AuthUserService
 import ru.itmo.blpslab1.utils.core.toResponse
 
 @RestController
 @RequestMapping("/api/users")
+@SecurityRequirement(name = "JWT")
 class AuthController(
     private var authUserService: AuthUserService
 ) {
@@ -24,4 +24,9 @@ class AuthController(
     fun signUpUser(
         @Valid @RequestBody signUpRequest: SignUpRequest
     ) = authUserService.signUp(signUpRequest).toResponse()
+
+    @PostMapping("/getAll")
+    fun getAll(
+        @Valid @RequestBody userQuery: UserQuery
+    ) = authUserService.getAll(userQuery)
 }
