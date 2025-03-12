@@ -1,5 +1,6 @@
 package ru.itmo.blpslab1.service.impl
 
+import org.springframework.data.domain.PageRequest
 import ru.itmo.blpslab1.rest.dto.response.toResponse
 
 import org.springframework.http.HttpStatus.*
@@ -8,7 +9,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.repository.GroupRepository
 import ru.itmo.blpslab1.domain.repository.PromotionTaskRepository
+import ru.itmo.blpslab1.domain.repository.specification.PromotionTaskSpecification
 import ru.itmo.blpslab1.rest.dto.request.PromotionTaskRequest
+import ru.itmo.blpslab1.rest.dto.request.query.PromotionTaskQuery
 import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.PromotionTaskResponse
 import ru.itmo.blpslab1.service.PromotionTaskService
@@ -41,14 +44,11 @@ class PromotionTaskServiceImpl(
 
         var promotionTask = request.toDomain().apply { group = dbGroup }
 
-        if(request.image == null) {
-            promotionTask = promotionTaskRepository.save(promotionTask)
-            return ok(promotionTask.toResponse())
-        }
+        if(request.image == null) return ok(promotionTaskRepository.save(promotionTask).toResponse())
 
         val uploadImageContinuable = userImageService.saveImage(request.image)
 
-        promotionTask = request.toDomain().apply {
+        promotionTask = promotionTask.apply {
             imageName = uploadImageContinuable.uniqueFileName
         }
 
@@ -112,4 +112,11 @@ class PromotionTaskServiceImpl(
         onTrue = { ok(promotionTaskRepository.save(it!!.apply { isApproved = true }).toResponse()) },
         onFalse = { error(NOT_FOUND) }
     )
+
+    override fun getAll(promotionTaskQuery: PromotionTaskQuery): Result<List<PromotionTaskResponse>> {
+        val page = PageRequest.of(promotionTaskQuery.offset, promotionTaskQuery.limit)
+        val spec = PromotionTaskSpecification(promotionTaskQuery)
+
+        return ok(promotionTaskRepository.findAll(spec, page).toList().map { it.toResponse() })
+    }
 }

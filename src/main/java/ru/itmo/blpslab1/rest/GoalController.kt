@@ -1,5 +1,6 @@
 package ru.itmo.blpslab1.rest
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
@@ -18,6 +19,7 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/goals")
+@SecurityRequirement(name = "JWT")
 class GoalController(
     private val goalService: GoalService
 ) {

@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import ru.itmo.blpslab1.rest.dto.request.PromotionTaskRequest
+import ru.itmo.blpslab1.rest.dto.request.query.PromotionTaskQuery
 import ru.itmo.blpslab1.service.PromotionTaskService
 import java.util.UUID
 
@@ -53,4 +54,9 @@ class PromotionTaskController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = promotionTaskService.approvePromotionTask(userDetails, id)
+
+    @PostMapping("/getAll")
+    fun getAll(
+        @Valid @RequestBody promotionTaskQuery: PromotionTaskQuery
+    ) = promotionTaskService.getAll(promotionTaskQuery)
 }

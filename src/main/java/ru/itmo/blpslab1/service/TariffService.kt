@@ -9,15 +9,15 @@ import java.util.UUID
 
 interface TariffService {
 
-    @PreAuthorize("hasAnyAuthority('TARIFF_CREATE')")
+    @PreAuthorize("hasAnyAuthority('TARIFF_CREATE', 'TARIFF_ADMIN')")
     fun createTariff(userDetails: UserDetails, tariffRequest: TariffRequest): Result<TariffResponse>
 
-    @PreAuthorize("hasAnyAuthority('TARIFF_VIEW')")
+    @PreAuthorize("hasAnyAuthority('TARIFF_VIEW', 'TARIFF_ADMIN')")
     fun getTariff(userDetails: UserDetails, id: UUID): Result<TariffResponse>
 
-    @PreAuthorize("hasAnyAuthority('TARIFF_EDIT')")
+    @PreAuthorize("hasAnyAuthority('TARIFF_EDIT', 'TARIFF_ADMIN')")
     fun editTariff(userDetails: UserDetails, tariffRequest: TariffRequest): Result<TariffResponse>
 
-    @PreAuthorize("hasAnyAuthority('TARIFF_DELETE')")
+    @PreAuthorize("hasAnyAuthority('TARIFF_DELETE', 'TARIFF_ADMIN')")
     fun removeTariff(userDetails: UserDetails, id: UUID): Result<Unit>
 }

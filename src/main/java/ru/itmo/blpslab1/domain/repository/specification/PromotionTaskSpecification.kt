@@ -6,7 +6,6 @@ import jakarta.persistence.criteria.Predicate
 import jakarta.persistence.criteria.Root
 import org.springframework.data.jpa.domain.Specification
 import ru.itmo.blpslab1.domain.entity.PromotionTask
-import ru.itmo.blpslab1.domain.enums.PromotionType
 import ru.itmo.blpslab1.rest.dto.request.query.PromotionTaskQuery
 import ru.itmo.blpslab1.utils.core.isNotEmpty
 import java.util.UUID
@@ -30,7 +29,7 @@ class PromotionTaskSpecification(
             criteriaBuilder.and(resPredicate, isApprovedPredicate)
         }
         if (isNotEmpty(promotionTaskQuery.promotionTypes)){
-            val promotionTypesPredicate = root.get<PromotionType>(PromotionTask.Fields.PROMOTION_TYPE).`in`(promotionTaskQuery.promotionTypes)
+            val promotionTypesPredicate = root.get<String>(PromotionTask.Fields.PROMOTION_TYPE).`in`(promotionTaskQuery.promotionTypes!!.map { it.name })
             resPredicate = criteriaBuilder.and(resPredicate, promotionTypesPredicate)
         }
         return resPredicate

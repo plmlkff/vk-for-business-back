@@ -10,18 +10,22 @@ import ru.itmo.blpslab1.domain.entity.User;
 public class SignUpRequest {
     @NotNull
     @NotEmpty
+    @Size(min = 3)
     private String login;
 
     @NotNull
     @NotEmpty
+    @Size(min = 3)
     private String firstName;
 
     @NotNull
     @NotEmpty
+    @Size(min = 3)
     private String surname;
 
     @NotNull
     @NotEmpty
+    @Size(min = 3)
     private String password;
 
     public static User toDomain(SignUpRequest signUpRequest){

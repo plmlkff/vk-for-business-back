@@ -2,6 +2,7 @@ package ru.itmo.blpslab1.domain.entity;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,18 +20,22 @@ public class User {
 
     @Column(name = "first_name", nullable = false)
     @NotNull
+    @Size(min = 3)
     private String firstName;
 
     @Column(nullable = false)
     @NotNull
+    @Size(min = 3)
     private String surname;
 
     @Column(nullable = false)
     @NotNull
+    @Size(min = 3)
     private String login;
 
     @Column(nullable = false)
     @NotNull
+    @Size(min = 3)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)

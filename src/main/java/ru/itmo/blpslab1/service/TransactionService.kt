@@ -28,9 +28,9 @@ interface TransactionService {
         newState: TransactionState
     ): Result<TransactionResponse>
 
-    @PreAuthorize("hasAuthority('TRANSACTION_CREATE')")
+    @PreAuthorize("hasAnyAuthority('TRANSACTION_CREATE', 'TRANSACTION_ADMIN')")
     fun createOnceDonation(userDetails: UserDetails, onceDonationRequest: OnceDonationRequest): Result<TransactionResponse>
 
-    @PreAuthorize("hasAuthority('TRANSACTION_CREATE')")
+    @PreAuthorize("hasAnyAuthority('TRANSACTION_CREATE', 'TRANSACTION_ADMIN')")
     fun createGoalDonation(userDetails: UserDetails, goalDonationRequest: GoalDonationRequest): Result<TransactionResponse>
 }
