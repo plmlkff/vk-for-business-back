@@ -19,6 +19,9 @@ alter table if exists tariff
 alter table if exists goal
     add constraint goal_group_id_fk foreign key (group_id) references person;
 
+alter table if exists goal
+    add constraint goal_recipient_card_id_fk foreign key (recipient_card_id) references card_credential on DELETE set null;
+
 alter table if exists user_authorities
     add constraint user_authorities_role_id_fk foreign key (role_id) references user_role;
 

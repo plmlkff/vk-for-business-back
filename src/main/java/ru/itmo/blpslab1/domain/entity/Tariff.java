@@ -31,10 +31,18 @@ public class Tariff {
     private String previewImageName;
 
     @ManyToOne
+    @JoinColumn(name = "recipient_card_id")
+    private CardCredential recipientCard;
+
+    @ManyToOne
     @JoinColumn(name = "group_id", nullable = false)
     @NotNull
     private Group group;
 
     @OneToMany(mappedBy = Subscription.Fields.TARIFF, cascade = CascadeType.ALL)
     private Set<Subscription> subscriptions;
+
+    public interface Fields{
+        String RECIPIENT_CARD = "recipientCard";
+    }
 }

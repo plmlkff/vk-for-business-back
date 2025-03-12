@@ -6,8 +6,10 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import ru.itmo.blpslab1.domain.enums.ActionType;
+import ru.itmo.blpslab1.domain.enums.TransactionState;
 import ru.itmo.blpslab1.domain.enums.TransactionType;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Entity
@@ -24,6 +26,15 @@ public class Transaction {
     @NotNull
     private TransactionType transactionType;
 
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private TransactionState state = TransactionState.NEW;
+
+    @Column(nullable = false)
+    @NotNull
+    private Date created = new Date();
+
     @Column(name = "action_type", nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
@@ -34,8 +45,7 @@ public class Transaction {
     @Min(0)
     private Double amount;
 
-    @Column(name = "target_entity_id", nullable = false)
-    @NotNull
+    @Column(name = "target_entity_id")
     private UUID targetEntityId;
 
     @ManyToOne

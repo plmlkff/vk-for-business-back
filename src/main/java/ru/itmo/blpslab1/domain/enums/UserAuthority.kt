@@ -66,10 +66,7 @@ enum class UserAuthority: GrantedAuthority {
     Transaction
      */
     TRANSACTION_ADMIN,
-    TRANSACTION_CREATE,
     TRANSACTION_VIEW,
-    TRANSACTION_EDIT,
-    TRANSACTION_DELETE,
 
     /*
     User

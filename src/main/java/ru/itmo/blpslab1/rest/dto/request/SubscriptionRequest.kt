@@ -9,7 +9,8 @@ data class SubscriptionRequest(
     val from: Date,
     val to: Date?,
     val tariffId: UUID,
-    val ownerId: UUID
+    val ownerId: UUID,
+    val ownerCardId: UUID
 )
 
 fun SubscriptionRequest.toDomain() = Subscription().also {

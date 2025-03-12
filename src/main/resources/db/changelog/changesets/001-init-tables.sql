@@ -43,30 +43,34 @@ create table tariff
     group_id           uuid         not null,
     name               varchar(255) not null,
     preview_image_name varchar(128),
+    recipient_card_id  uuid         not null,
     constraint tariff_price_min_value_constr check ( price >= 0 )
 );
 
 create table transaction
 (
-    id                uuid      primary key,
-    amount            float(53) not null check (amount >= 0),
-    payer_id          uuid      not null,
-    payer_card_id     uuid      not null,
-    recipient_card_id uuid      not null,
-    transaction_type  varchar(255) not null,
-    target_entity_id  uuid      not null,
+    id                 uuid primary key,
+    amount             float(53)    not null check (amount >= 0),
+    created            timestamp(6) not null,
+    state              varchar(64)  not null,
+    payer_id           uuid         not null,
+    payer_card_id      uuid         not null,
+    recipient_card_id  uuid         not null,
+    transaction_type   varchar(255) not null,
+    target_entity_id   uuid,
     constraint transaction_transaction_type_enum_value_constr check ( transaction_type in ('DEBIT', 'WITHDRAW') ),
     constraint transaction_transaction_type_and_target_entity_id_unique_constr unique (transaction_type, target_entity_id)
 );
 
 create table goal
 (
-    id          uuid         primary key,
-    name        varchar(128) not null,
-    target_sum  float        not null,
-    current_sum float        not null,
-    group_id    uuid         not null,
-    version     integer      not null,
+    id                 uuid         primary key,
+    name               varchar(128) not null,
+    target_sum         float        not null,
+    current_sum        float        not null,
+    group_id           uuid         not null,
+    version            integer      not null,
+    recipient_card_id  uuid,
     constraint goal_target_sum_min_value_constr check ( goal.target_sum >= 0 ),
     constraint goal_current_sum_min_value_constr check ( goal.current_sum >= 0 ),
     constraint goal_version_value_constr check ( goal.version >= 0 )

@@ -7,15 +7,23 @@ import ru.itmo.blpslab1.utils.service.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.itmo.blpslab1.domain.entity.Tariff
+import ru.itmo.blpslab1.domain.enums.ActionType
+import ru.itmo.blpslab1.domain.enums.TransactionType
 import ru.itmo.blpslab1.domain.enums.UserAuthority
+import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.SubscriptionRepository
 import ru.itmo.blpslab1.domain.repository.TariffRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
 import ru.itmo.blpslab1.rest.dto.request.SubscriptionRequest
+import ru.itmo.blpslab1.rest.dto.request.TransactionRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.SubscriptionResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
+import ru.itmo.blpslab1.service.CardCredentialService
 import ru.itmo.blpslab1.service.SubscriptionService
+import ru.itmo.blpslab1.service.TransactionService
+import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
 import ru.itmo.blpslab1.utils.core.hasNoAccessTo
 import ru.itmo.blpslab1.utils.core.hasNoAuthority
 import ru.itmo.blpslab1.utils.core.test
@@ -28,30 +36,38 @@ class SubscriptionServiceImpl(
     private val subscriptionRepository: SubscriptionRepository,
     private val tariffRepository: TariffRepository,
     private val userRepository: UserRepository,
+    private val cardCredentialRepository: CardCredentialRepository,
+    private val transactionService: TransactionService
 ): SubscriptionService {
 
     @Transactional
     override fun createSubscription(
         userDetails: UserDetails,
-        subscriptionRequest: SubscriptionRequest,
+        subscriptionRequest: SubscriptionRequest
     ): Result<SubscriptionResponse> {
         if (subscriptionRequest.id != null) return error()
 
         val tariff = tariffRepository.findById(subscriptionRequest.tariffId).getOrNull() ?: return error(NOT_FOUND)
-        val owner = userRepository.findById(subscriptionRequest.ownerId).getOrNull() ?: return error(NOT_FOUND)
+        val owner = tariff.group.owner
+        val ownerCard = cardCredentialRepository.findById(subscriptionRequest.ownerCardId).getOrNull() ?: kotlin.error(NOT_FOUND)
 
         if (owner.login != userDetails.username
             && userDetails hasNoAuthority UserAuthority.SUBSCRIPTION_ADMIN) return error(METHOD_NOT_ALLOWED)
 
-        val subscription = subscriptionRequest.toDomain().apply {
+        var subscription = subscriptionRequest.toDomain().apply {
             to = Date.from(ZonedDateTime.ofInstant(from.toInstant(), ZoneId.systemDefault()).plusMonths(1).toInstant())
             this.tariff = tariff
             this.owner = owner
         }
 
-        TODO("CREATE TRANSACTION")
+        subscription = subscriptionRepository.save(subscription)
+        val transactionRequest = createTransactionRequest(tariff, subscription.id, owner.id, ownerCard.id)
 
-        return ok(subscriptionRepository.save(subscription).toResponse())
+        val createTransactionRes = transactionService.createTransaction(userDetails, transactionRequest)
+
+        if (createTransactionRes.status != OK) throw RollbackTransactionException(createTransactionRes.status)
+
+        return ok(subscription.toResponse().copy(paymentUrl = createTransactionRes.body?.paymentLink))
     }
 
     override fun getSubscription(
@@ -106,5 +122,18 @@ class SubscriptionServiceImpl(
         condition = {it != null},
         onTrue = { ok(subscriptionRepository.save(it!!.apply { isPaid = true }).toResponse()) },
         onFalse = { error(NOT_FOUND) }
+    )
+
+    private fun createTransactionRequest(
+        tariff: Tariff, subscriptionId: UUID, payerId: UUID, payerCardId: UUID
+    ) = TransactionRequest(
+        id = null,
+        transactionType = TransactionType.DEBIT,
+        actionType = ActionType.SUBSCRIPTION,
+        amount = tariff.price,
+        targetEntityId = subscriptionId,
+        payerId = payerId,
+        payerCardId = payerCardId,
+        recipientCardId = tariff.recipientCard.id
     )
 }

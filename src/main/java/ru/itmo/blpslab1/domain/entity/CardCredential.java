@@ -38,6 +38,12 @@ public class CardCredential {
     @NotNull
     private User owner;
 
+    @OneToMany(mappedBy = Tariff.Fields.RECIPIENT_CARD, cascade = CascadeType.ALL)
+    private Set<Tariff> tariffs;
+
+    @OneToMany(mappedBy = Goal.Fields.RECIPIENT_CARD)
+    private Set<Goal> goals;
+
     interface Fields{
         String OWNER = "owner";
     }

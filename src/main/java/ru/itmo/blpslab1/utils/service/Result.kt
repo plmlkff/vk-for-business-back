@@ -25,6 +25,11 @@ class Result<T> internal constructor(
         return if (status == HttpStatus.OK) ifOk(body)
         else ifError(status)
     }
+
+    fun withEvents(vararg events: ApplicationEvent): Result<T>{
+        this.events.addAll(events)
+        return this
+    }
 }
 
 fun <T> error(

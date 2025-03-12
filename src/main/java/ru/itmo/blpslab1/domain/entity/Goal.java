@@ -38,11 +38,16 @@ public class Goal {
     @JoinColumn(name = "group_id", nullable = false)
     private Group group;
 
+    @ManyToOne
+    @JoinColumn(name = "recipient_card_id", nullable = false)
+    private CardCredential recipientCard;
+
     @Column(nullable = false)
     @Version
     private Integer version;
 
     public interface Fields{
         String GROUP = "group";
+        String RECIPIENT_CARD = "recipientCard";
     }
 }
