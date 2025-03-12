@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.enums.TransactionType
 import ru.itmo.blpslab1.domain.enums.UserAuthority
+import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.GoalRepository
+import ru.itmo.blpslab1.domain.repository.GroupRepository
 import ru.itmo.blpslab1.rest.dto.request.GoalAmountChangeRequest
 import ru.itmo.blpslab1.rest.dto.request.GoalRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
@@ -24,7 +26,9 @@ import kotlin.jvm.optionals.getOrNull
 
 @Service
 class GoalServiceImpl(
-    private val goalRepository: GoalRepository
+    private val goalRepository: GoalRepository,
+    private val groupRepository: GroupRepository,
+    private val cardCredentialRepository: CardCredentialRepository
 ) : GoalService {
 
     @Transactional
@@ -33,7 +37,13 @@ class GoalServiceImpl(
     ): Result<GoalResponse> {
         if (goalRequest.id != null) return error(BAD_REQUEST)
 
-        val goal = goalRequest.toDomain()
+        val dbGroup = groupRepository.findById(goalRequest.groupId).getOrNull() ?: return error(NOT_FOUND)
+        val dbCardCredential = cardCredentialRepository.findById(goalRequest.recipientCardId).getOrNull() ?: return error(NOT_FOUND)
+
+        val goal = goalRequest.toDomain().apply {
+            group = dbGroup
+            recipientCard = dbCardCredential
+        }
 
         return ok(goalRepository.save(goal).toResponse())
     }
@@ -55,9 +65,17 @@ class GoalServiceImpl(
         val goalId = goalRequest.id ?: return error(BAD_REQUEST)
 
         val dbGoal = goalRepository.findById(goalId).getOrNull() ?: return error(NOT_FOUND)
+        val dbCardCredential =
+            cardCredentialRepository.findById(goalRequest.recipientCardId).getOrNull() ?: return error(NOT_FOUND)
 
-        return if (userDetails hasNoAccessTo dbGoal) error(METHOD_NOT_ALLOWED)
-        else ok(goalRepository.save(goalRequest.toDomain()).toResponse())
+        return if (userDetails hasNoAccessTo dbGoal || userDetails hasNoAccessTo dbCardCredential) error(
+            METHOD_NOT_ALLOWED
+        )
+        else ok(goalRepository.save(goalRequest.toDomain()
+            .apply {
+                recipientCard = dbCardCredential
+            }).toResponse()
+        )
     }
 
     @Transactional

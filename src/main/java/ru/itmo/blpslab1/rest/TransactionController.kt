@@ -29,7 +29,7 @@ class TransactionController(
     ) = transactionService.createOnceDonation(userDetails, onceDonationRequest)
 
     @PostMapping("/goal-donation")
-    fun createOnceDonation(
+    fun createGoalDonation(
         @AuthenticationPrincipal userDetails: UserDetails,
         @Valid @RequestBody goalDonationRequest: GoalDonationRequest
     ) = transactionService.createGoalDonation(userDetails, goalDonationRequest)

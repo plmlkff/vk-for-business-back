@@ -20,7 +20,7 @@ class ServiceInterceptor(
 ){
     val logger: Logger = LoggerFactory.getLogger(ServiceInterceptor::class.java)
 
-    @Pointcut("within(ru.itmo.blpslab1.service.*)")
+    @Pointcut("within(ru.itmo.blpslab1.service.impl.*)")
     fun onService(){}
 
     @Around("onService()")

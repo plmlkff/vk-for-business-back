@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import ru.itmo.blpslab1.core.event.entity.TransactionChangedEvent
 import ru.itmo.blpslab1.domain.enums.ActionType
+import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.rest.dto.request.GoalAmountChangeRequest
 import ru.itmo.blpslab1.service.GoalService
@@ -35,9 +36,14 @@ class TransactionEventHandler(
 
     @EventListener
     fun onTransactionChangedEvent(transactionChangedEvent: TransactionChangedEvent) {
-        when (transactionChangedEvent.transaction.actionType) {
-            ActionType.GOAL -> invokeGoalTransactionProcessing(transactionChangedEvent)
-            ActionType.SUBSCRIPTION -> invokeSubscriptionTransactionProcessing(transactionChangedEvent)
+        if (transactionChangedEvent.transaction.state == TransactionState.CANCELED) Unit
+        else when (transactionChangedEvent.transaction.actionType) {
+            ActionType.GOAL -> {
+                invokeGoalTransactionProcessing(transactionChangedEvent)
+            }
+            ActionType.SUBSCRIPTION -> {
+                invokeSubscriptionTransactionProcessing(transactionChangedEvent)
+            }
             ActionType.DONATION -> Unit
         }
     }

@@ -12,7 +12,9 @@ data class GoalRequest(
     @field:Min(0)
     val targetSum: Double,
     @field:Min(0)
-    val currentSum: Double
+    val currentSum: Double,
+    val groupId: UUID,
+    val recipientCardId: UUID
 )
 
 fun GoalRequest.toDomain() = Goal().let {

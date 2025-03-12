@@ -1,11 +1,13 @@
 package ru.itmo.blpslab1.utils.service
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import org.springframework.context.ApplicationEvent
 import org.springframework.http.HttpStatus
 
 class Result<T> internal constructor(
     val body: T?,
     val status: HttpStatus,
+    @field:JsonIgnore
     val events: MutableSet<ApplicationEvent>
 ){
     inline fun <R> map(crossinline function: (T?) -> R): Result<R> {

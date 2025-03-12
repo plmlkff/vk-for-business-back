@@ -1,7 +1,7 @@
 create table card_credential
 (
     id          uuid         primary key,
-    cvv         smallint     not null,
+    cvv         varchar(3)   not null,
     end_date    timestamp(6) not null,
     card_number varchar(16)  not null,
     owner_id    uuid         not null

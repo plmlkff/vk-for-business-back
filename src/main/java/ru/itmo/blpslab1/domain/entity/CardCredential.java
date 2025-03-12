@@ -31,7 +31,9 @@ public class CardCredential {
 
     @Column(nullable = false)
     @NotNull
-    private Short cvv;
+    @Size(min = 3)
+    @Size(max = 3)
+    private String cvv;
 
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
