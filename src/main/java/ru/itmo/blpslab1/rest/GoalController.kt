@@ -19,7 +19,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/goals")
-@SecurityRequirement(name = "JWT")
 class GoalController(
     private val goalService: GoalService
 ) {

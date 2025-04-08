@@ -22,7 +22,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/groups")
-@SecurityRequirement(name = "JWT")
 class GroupController (
     private val groupService: GroupService
 ){

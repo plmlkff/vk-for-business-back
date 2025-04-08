@@ -19,7 +19,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/promotion-task")
-@SecurityRequirement(name = "JWT")
 class PromotionTaskController(
     private val promotionTaskService: PromotionTaskService
 ) {

@@ -18,7 +18,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/card-credentials")
-@SecurityRequirement(name = "JWT")
 class CardCredentialController(
     val cardCredentialService: CardCredentialService
 ) {

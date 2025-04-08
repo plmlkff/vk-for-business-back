@@ -11,7 +11,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/subscription")
-@SecurityRequirement(name = "JWT")
 class SubscriptionController(
     private val subscriptionService: SubscriptionService
 ) {

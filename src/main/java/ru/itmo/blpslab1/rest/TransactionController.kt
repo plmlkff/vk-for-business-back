@@ -18,7 +18,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/transaction")
-@SecurityRequirement(name = "JWT")
 class TransactionController(
     private val transactionService: TransactionService
 ) {

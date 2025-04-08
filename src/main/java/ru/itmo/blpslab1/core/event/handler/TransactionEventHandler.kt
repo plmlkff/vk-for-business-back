@@ -24,13 +24,9 @@ class TransactionEventHandler(
             return UserAuthority.entries.toMutableSet()
         }
 
-        override fun getPassword(): String {
-            TODO("Not yet implemented")
-        }
+        override fun getPassword(): String = ""
 
-        override fun getUsername(): String {
-            TODO("Not yet implemented")
-        }
+        override fun getUsername(): String = ""
 
     }
 

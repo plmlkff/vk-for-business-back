@@ -1,0 +1,37 @@
+POST http://127.0.0.1:9090/api/users/signup
+Content-Type: application/json
+Accept: */*
+
+{
+  "login": "user",
+  "firstName": "Paul",
+  "surname": "Malkov",
+  "password": "user"
+}
+
+### -------------------------------
+### Create new Group (Unauthorized)
+### -------------------------------
+POST http://127.0.0.1:9090/api/groups/
+Content-Type: application/json
+Accept: */*
+
+{
+  "name": "My First Group",
+  "ownerId": "de74e874-6b2e-4c09-8af4-d710c2c4123e",
+  "subscriberIds": []
+}
+
+### -------------------------------
+### Create new Group (Unauthorized)
+### -------------------------------
+POST http://127.0.0.1:9090/api/groups/
+Content-Type: application/json
+Accept: */*
+Authorization: Basic dXNlcjp1c2Vy
+
+{
+  "name": "My First Group",
+  "ownerId": "de74e874-6b2e-4c09-8af4-d710c2c4123e",
+  "subscriberIds": []
+}

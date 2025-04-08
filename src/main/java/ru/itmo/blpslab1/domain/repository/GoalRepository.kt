@@ -6,5 +6,4 @@ import ru.itmo.blpslab1.domain.entity.Goal
 import java.util.UUID
 
 @Repository
-interface GoalRepository: JpaRepository<Goal, UUID>{
-}
+interface GoalRepository: JpaRepository<Goal, UUID>
