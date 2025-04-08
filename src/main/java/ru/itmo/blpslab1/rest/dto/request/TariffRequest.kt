@@ -8,6 +8,7 @@ data class TariffRequest(
     val name: String,
     val price: Double,
     val previewImage: ImageRequest?,
+    val recipientCardId: UUID,
     val groupId: UUID
 )
 

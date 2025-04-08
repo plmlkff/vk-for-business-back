@@ -47,4 +47,10 @@ class GoalController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = goalService.removeGoal(userDetails, id).toResponse()
+
+    @GetMapping("/by-group/{groupId}")
+    fun getAllByGroupId(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable("groupId") groupId: UUID
+    ) = goalService.getAllByGroupId(userDetails, groupId)
 }

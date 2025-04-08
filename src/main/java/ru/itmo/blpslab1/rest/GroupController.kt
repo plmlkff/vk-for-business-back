@@ -52,4 +52,10 @@ class GroupController (
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = groupService.removeGroup(userDetails, id).toResponse()
+
+
+    @GetMapping("/")
+    fun getAllByUser(
+        @AuthenticationPrincipal userDetails: UserDetails,
+    ) = groupService.getAllByUser(userDetails)
 }

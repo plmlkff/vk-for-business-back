@@ -1,9 +1,9 @@
 package ru.itmo.blpslab1.rest
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -39,4 +39,10 @@ class TransactionController(
         @PathVariable("id") id: UUID,
         @Valid @RequestBody transactionState: TransactionState
     ) = transactionService.editTransactionState(userDetails, id, transactionState)
+
+    @GetMapping("/{id}")
+    fun getTransaction(
+        @AuthenticationPrincipal userDetails: UserDetails,
+        @PathVariable("id") id: UUID
+    ) = transactionService.getTransaction(userDetails, id)
 }

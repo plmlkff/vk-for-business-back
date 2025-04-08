@@ -11,17 +11,18 @@ import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
 
 interface TransactionService {
-
     fun createTransaction(
         userDetails: UserDetails,
         transactionRequest: TransactionRequest
     ): Result<TransactionResponse>
 
+    @PreAuthorize("hasAnyAuthority('TRANSACTION_CREATE', 'TRANSACTION_ADMIN')")
     fun getTransaction(
         userDetails: UserDetails,
         id: UUID
     ): Result<TransactionResponse>
 
+    @PreAuthorize("hasAnyAuthority('TRANSACTION_ADMIN')")
     fun editTransactionState(
         userDetails: UserDetails,
         id: UUID,

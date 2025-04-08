@@ -19,4 +19,7 @@ interface GroupService {
 
     @PreAuthorize("hasAnyAuthority('GROUP_REMOVE', 'GROUP_ADMIN')")
     fun removeGroup(userDetails: UserDetails, id: UUID): Result<Unit>
+
+    @PreAuthorize("hasAnyAuthority('GROUP_VIEW', 'GROUP_ADMIN')")
+    fun getAllByUser(userDetails: UserDetails): Result<List<GroupResponse>>
 }

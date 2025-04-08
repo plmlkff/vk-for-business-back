@@ -33,6 +33,11 @@ interface SubscriptionService {
         id: UUID
     ): Result<Unit>
 
+    @PreAuthorize("hasAnyAuthority('SUBSCRIPTION_VIEW', 'SUBSCRIPTION_ADMIN')")
+    fun getAllByOwner(
+        userDetails: UserDetails
+    ): Result<List<SubscriptionResponse>>
+
     @PreAuthorize("hasAnyAuthority('SUBSCRIPTION_ADMIN')")
     fun markSubscriptionPaid(
         userDetails: UserDetails,

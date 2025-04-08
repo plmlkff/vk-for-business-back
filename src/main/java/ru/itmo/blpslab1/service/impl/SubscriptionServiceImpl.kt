@@ -49,7 +49,7 @@ class SubscriptionServiceImpl(
 
         val tariff = tariffRepository.findById(subscriptionRequest.tariffId).getOrNull() ?: return error(NOT_FOUND)
         val owner = tariff.group.owner
-        val ownerCard = cardCredentialRepository.findById(subscriptionRequest.ownerCardId).getOrNull() ?: kotlin.error(NOT_FOUND)
+        val ownerCard = cardCredentialRepository.findById(subscriptionRequest.ownerCardId).getOrNull() ?: return error(NOT_FOUND)
 
         if (owner.login != userDetails.username
             && userDetails hasNoAuthority UserAuthority.SUBSCRIPTION_ADMIN) return error(METHOD_NOT_ALLOWED)
@@ -112,6 +112,13 @@ class SubscriptionServiceImpl(
             else ok(subscriptionRepository.delete(it))
         },
         onFalse = { error(NOT_FOUND) }
+    )
+
+    override fun getAllByOwner(
+        userDetails: UserDetails
+    ): Result<List<SubscriptionResponse>> = ok(
+        subscriptionRepository.findAllByOwner(userDetails.username)
+            .map { it.toResponse() }
     )
 
     @Transactional

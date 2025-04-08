@@ -49,7 +49,7 @@ class PromotionTaskController(
         ) = promotionTaskService.removePromotionTask(userDetails, id)
 
     @PatchMapping("/{id}/approve")
-    fun createPromotionTask(
+    fun approvePromotionTask(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = promotionTaskService.approvePromotionTask(userDetails, id)

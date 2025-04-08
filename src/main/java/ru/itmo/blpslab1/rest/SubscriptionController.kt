@@ -39,4 +39,9 @@ class SubscriptionController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = subscriptionService.removeSubscription(userDetails, id)
+
+    @GetMapping("/")
+    fun getAllByOwnerId(
+        @AuthenticationPrincipal userDetails: UserDetails,
+    ) = subscriptionService.getAllByOwner(userDetails)
 }

@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     @Bean
     @SneakyThrows
-    public SecurityFilterChain getSecurityFilterChain(final HttpSecurity httpSecurity, final JwtFilter jwtFilter){
+    public SecurityFilterChain getSecurityFilterChain(final HttpSecurity httpSecurity){
         return httpSecurity
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)

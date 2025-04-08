@@ -13,8 +13,8 @@ interface GroupRepository : JpaRepository<Group, UUID> {
     @Query(
         """
             SELECT g FROM Group g
-            WHERE g.owner.id = :id
+            WHERE g.owner.login = :username
         """
     )
-    fun findAllByOwnerId(@Param("id") id: UUID): List<Group>
+    fun findAllByOwner(@Param("username") username: String): List<Group>
 }

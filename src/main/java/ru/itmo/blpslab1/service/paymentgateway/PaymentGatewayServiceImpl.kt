@@ -24,6 +24,6 @@ class PaymentGatewayServiceImpl: PaymentGatewayService {
     }
 
     override fun registerPayment(transaction: Transaction): String{
-        return "https://pay-pay-pay.ru/payment/${UUID.randomUUID()}"
+        return "https://pay-pay-pay.ru/payment/${transaction.id}"
     }
 }

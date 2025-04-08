@@ -3,6 +3,7 @@ package ru.itmo.blpslab1.service.impl
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import ru.itmo.blpslab1.domain.entity.CardCredential
 import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
@@ -78,6 +79,13 @@ class CardCredentialServiceImpl(
             else ok(cardCredentialRepository.delete(it))
         },
         onFalse = { error(HttpStatus.NOT_FOUND)}
+    )
+
+    override fun getAllCardCredentialByUser(
+        userDetails: UserDetails
+    ): Result<List<CardCredentialResponse>> = ok(
+        cardCredentialRepository.findAllByOwner(userDetails.username)
+            .map(CardCredential::toResponse)
     )
 
     fun CardCredentialRequest.toFilledDomain() = toDomain().let {
