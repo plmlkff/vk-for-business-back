@@ -13,7 +13,7 @@ Accept: */*
 }
 
 ###
-@owner_id=28479cb5-f57d-4a5a-8558-47e7c711fbf3
+@owner_id=11724dc9-f1de-4d7b-a492-a06895440dc8
 
 ### -------------------------------
 ### Create new Group (Unauthorized)
@@ -44,7 +44,7 @@ Authorization: Basic {{user_basic}}
 
 
 ###
-@group_id=d9dbf143-1f5e-41c1-875f-9087c58d90e3
+@group_id=b672dadc-08eb-4ecc-9d2e-ededb482f077
 
 ### -------------------------------
 ### Create new Card Credentials(as User)
@@ -62,7 +62,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@card_cerdentials_id=aeb97c5f-2400-42aa-bc0f-2c08726689ae
+@card_cerdentials_id=cf5fbddf-e1b5-4c7b-b0aa-2eb8acc3bbab
 
 ### -------------------------------
 ### Get Users groups
@@ -100,7 +100,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@promotion_task_id=badf9ac1-1af5-4c6c-9193-e63d120d137f
+@promotion_task_id=60f731b4-da78-4d0f-a4be-edc52b2a0cd9
 
 ### -------------------------------
 ### Get all not approved promotion tasks(as User)
@@ -132,7 +132,7 @@ Authorization: Basic {{admin_basic}}
 GET http://127.0.0.1:9090/api/promotion-task/{{promotion_task_id}}
 Content-Type: application/json
 Accept: */*
-Authorization: Basic {{admin_basic}}}
+Authorization: Basic {{admin_basic}}
 
 ### -------------------------------
 ### Approve promotion task(as Admin)
@@ -159,7 +159,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@goal_id=8438c740-257a-493f-bc3e-b7d4aa98a9c8
+@goal_id=b836bb04-f70c-4fd1-8f85-c0c628d66e08
 
 ### -------------------------------
 ### Get group goals(as User)
@@ -185,7 +185,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@transaction_id=0843de7e-2aa1-418f-b82b-29521778a403
+@transaction_id=bb2be0f2-c2ee-4c2c-a931-4f91a72344e8
 
 ### -------------------------------
 ### Send transaction callback(as User)
@@ -231,7 +231,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@tariff_id=9ea6be35-ba7d-41b6-ae0d-9edd6a42b3f8
+@tariff_id=a40d0fba-1927-459d-9736-f1d521be39b6
 
 ### -------------------------------
 ### Create subscription(as User)
@@ -250,7 +250,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@subscription_transaction_id=3cb2be5e-b4d2-43ba-9d81-81f52cb22bb5
+@subscription_transaction_id=73e2db2f-8907-4b88-a991-6b74de4790c7
 
 ### -------------------------------
 ### Get user subscriptions
