@@ -4,7 +4,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
-import ru.itmo.blpslab1.kafka.KafkaTopicsConfig
+import ru.itmo.blpslab1.config.KafkaTopicsConfig
 import ru.itmo.blpslab1.kafka.event.KafkaMessage
 import ru.itmo.blpslab1.kafka.event.TransactionEvent
 import ru.itmo.blpslab1.kafka.service.TransactionKafkaEventService

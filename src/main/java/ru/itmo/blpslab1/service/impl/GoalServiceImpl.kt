@@ -99,9 +99,7 @@ class GoalServiceImpl(
 
     @Retryable(maxAttempts = 20, retryFor = [StaleStateException::class])
     @Transactional
-    override fun editGoalAmount(userDetails: UserDetails, request: GoalAmountChangeRequest): Result<GoalResponse> {
-        if (userDetails hasNoAuthority UserAuthority.GOAL_ADMIN) return error(METHOD_NOT_ALLOWED)
-
+    override fun editGoalAmount(request: GoalAmountChangeRequest): Result<GoalResponse> {
         val dbGoal = goalRepository.findById(request.goalId).getOrNull() ?: return error(NOT_FOUND)
 
         when(request.transactionType){

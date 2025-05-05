@@ -38,9 +38,7 @@ interface SubscriptionService {
         userDetails: UserDetails
     ): Result<List<SubscriptionResponse>>
 
-    @PreAuthorize("hasAnyAuthority('SUBSCRIPTION_ADMIN')")
     fun markSubscriptionPaid(
-        userDetails: UserDetails,
         id: UUID
     ): Result<SubscriptionResponse>
 }

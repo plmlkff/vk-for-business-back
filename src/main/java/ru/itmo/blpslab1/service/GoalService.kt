@@ -25,5 +25,5 @@ interface GoalService {
     @PreAuthorize("hasAnyAuthority('GOAL_VIEW', 'GOAL_ADMIN')")
     fun getAllByGroupId(userDetails: UserDetails, groupId: UUID): Result<List<GoalResponse>>
 
-    fun editGoalAmount(userDetails: UserDetails, request: GoalAmountChangeRequest): Result<GoalResponse>
+    fun editGoalAmount(request: GoalAmountChangeRequest): Result<GoalResponse>
 }

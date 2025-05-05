@@ -1,15 +1,27 @@
 package ru.itmo.blpslab1.utils.service
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect
 import com.fasterxml.jackson.annotation.JsonIgnore
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.springframework.context.ApplicationEvent
 import org.springframework.http.HttpStatus
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 class Result<T> internal constructor(
+    @JsonProperty("body")
     val body: T?,
+    @JsonProperty("status")
     val status: HttpStatus,
     @field:JsonIgnore
     val events: MutableSet<ApplicationEvent>
 ){
+    @JsonIgnore
+    fun isOk() = status == HttpStatus.OK
+
+    @JsonIgnore
+    fun isError() = !isOk()
+
     inline fun <R> map(crossinline function: (T?) -> R): Result<R> {
         return if (status != HttpStatus.OK) error(status, events)
         else ok(function(body))

@@ -9,9 +9,10 @@ data class TransactionEvent(
     val actionType: ActionType,
     val targetEntityId: UUID,
     val transactionType: TransactionType,
-    val amount: Double,
-    override val TYPE: String = TransactionEvent.TYPE
+    val amount: Double
 ): KafkaMessage{
+    override val TYPE: String = TransactionEvent.TYPE
+
     companion object{
         const val TYPE = "TransactionEvent"
     }

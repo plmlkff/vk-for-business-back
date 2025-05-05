@@ -20,7 +20,6 @@ import ru.itmo.blpslab1.rest.dto.request.TransactionRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.SubscriptionResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
-import ru.itmo.blpslab1.service.CardCredentialService
 import ru.itmo.blpslab1.service.SubscriptionService
 import ru.itmo.blpslab1.service.TransactionService
 import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
@@ -123,7 +122,6 @@ class SubscriptionServiceImpl(
 
     @Transactional
     override fun markSubscriptionPaid(
-        userDetails: UserDetails,
         id: UUID
     ) = subscriptionRepository.findById(id).getOrNull().test(
         condition = {it != null},
