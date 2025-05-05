@@ -22,8 +22,35 @@ spring:
   jwt:
     life-time: 3600000  # ms
     secret: ${SECRET}
+  kafka:
+    bootstrap-servers: localhost:29092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        acks: 1
+        spring:
+          json:
+            add:
+              type:
+                headers: false
+    consumer:
+      group-id: "transaction-handlers-group-1"
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring:
+          json:
+            trusted:
+              packages: '*'
+            value:
+              default:
+                type: ru.itmo.blpslab1.kafka.event.KafkaMessage
 minio:
   bucket: ${MINIO_BUCKET}
   url: http://${MINIO_HOST}
   access-key: ${MINIO_ROOT_USER}
   secret-key: ${MINIO_ROOT_PASSWORD}
+kafka-topics:
+  transaction-events: ${KAFKA_TOPIC_TRANSACTION_EVENTS}

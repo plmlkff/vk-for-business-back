@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import ru.itmo.blpslab1.core.event.entity.TransactionChangedEvent
 import ru.itmo.blpslab1.domain.enums.ActionType
 import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.domain.enums.TransactionType
@@ -13,6 +12,8 @@ import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.GoalRepository
 import ru.itmo.blpslab1.domain.repository.TransactionRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
+import ru.itmo.blpslab1.kafka.event.toKafkaEvent
+import ru.itmo.blpslab1.kafka.service.TransactionKafkaEventService
 import ru.itmo.blpslab1.rest.dto.request.GoalDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.OnceDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.TransactionRequest
@@ -34,7 +35,8 @@ class TransactionServiceImpl(
     private val userRepository: UserRepository,
     private val cardCredentialRepository: CardCredentialRepository,
     private val paymentGatewayService: PaymentGatewayService,
-    private val goalRepository: GoalRepository
+    private val goalRepository: GoalRepository,
+    private val transactionKafkaEventService: TransactionKafkaEventService
 ) : TransactionService {
 
     @Transactional
@@ -80,8 +82,9 @@ class TransactionServiceImpl(
         val dbTransaction = transactionRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
 
         val newTransaction = dbTransaction.apply { state = newState }
+
+        transactionKafkaEventService.publishEvent(newTransaction.toKafkaEvent())
         return ok(transactionRepository.save(newTransaction).toResponse())
-            .withEvents(TransactionChangedEvent(newTransaction))
     }
 
 
