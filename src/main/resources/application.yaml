@@ -55,3 +55,6 @@ minio:
 kafka-topics:
   transaction-events: ${KAFKA_TOPIC_TRANSACTION_EVENTS}
   death-letter-queue: ${KAFKA_TOPIC_DEATH_LETTER_QUEUE}
+stripe:
+  webhooks:
+    secret: ${STRIPE_API_KEY}

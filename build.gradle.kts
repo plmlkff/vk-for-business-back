@@ -53,6 +53,8 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.vavr:vavr:0.10.5")
     implementation("io.arrow-kt:arrow-core:1.2.1")
+    implementation("com.stripe:stripe-java:29.1.0")
+    implementation("org.jboss.javaee:jboss-jca-api:1.5.0.GA")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
     implementation("io.minio:minio:8.5.10")

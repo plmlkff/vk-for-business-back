@@ -36,6 +36,7 @@ public class SecurityConfig {
                         configurer
                                 .requestMatchers("/api/users/auth").permitAll()
                                 .requestMatchers("/api/users/signup").permitAll()
+                                .requestMatchers("/api/stripe/webhook").permitAll()
                                 .requestMatchers("/actuator/**").permitAll()
                                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .anyRequest().authenticated()
