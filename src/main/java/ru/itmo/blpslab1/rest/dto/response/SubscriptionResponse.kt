@@ -8,7 +8,7 @@ data class SubscriptionResponse(
     val id: UUID?,
     val from: Date,
     val to: Date,
-    val isPaid: Boolean,
+    val isActive: Boolean,
     val tariff: TariffResponse,
     val owner: UserResponse,
     val paymentUrl: String?
@@ -18,7 +18,7 @@ fun Subscription.toResponse() = SubscriptionResponse(
     id = id,
     from = from,
     to = to,
-    isPaid = isPaid,
+    isActive = isActive,
     tariff = tariff.toResponse(),
     owner = owner.toResponse(),
     paymentUrl = null

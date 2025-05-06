@@ -125,7 +125,7 @@ class SubscriptionServiceImpl(
         id: UUID
     ) = subscriptionRepository.findById(id).getOrNull().test(
         condition = {it != null},
-        onTrue = { ok(subscriptionRepository.save(it!!.apply { isPaid = true }).toResponse()) },
+        onTrue = { ok(subscriptionRepository.save(it!!.apply { isActive = true }).toResponse()) },
         onFalse = { error(NOT_FOUND) }
     )
 

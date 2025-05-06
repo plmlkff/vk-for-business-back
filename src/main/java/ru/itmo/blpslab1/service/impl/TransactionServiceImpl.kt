@@ -3,6 +3,7 @@ package ru.itmo.blpslab1.service.impl
 import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.enums.ActionType
 import ru.itmo.blpslab1.domain.enums.TransactionState
@@ -24,6 +25,7 @@ import ru.itmo.blpslab1.service.TransactionService
 import ru.itmo.blpslab1.service.paymentgateway.PaymentGatewayService
 import ru.itmo.blpslab1.utils.core.hasNoAuthority
 import ru.itmo.blpslab1.utils.core.test
+import ru.itmo.blpslab1.utils.core.toResponse
 import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
 import ru.itmo.blpslab1.utils.service.*
@@ -72,6 +74,7 @@ class TransactionServiceImpl(
         onFalse = { error(NOT_FOUND) }
     )
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     override fun editTransactionState(
         userDetails: UserDetails,
         id: UUID,
@@ -80,6 +83,8 @@ class TransactionServiceImpl(
         if (userDetails hasNoAuthority UserAuthority.TRANSACTION_ADMIN) return error(METHOD_NOT_ALLOWED)
 
         val dbTransaction = transactionRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
+
+        if (dbTransaction.state != TransactionState.NEW) return ok(dbTransaction.toResponse())
 
         val newTransaction = dbTransaction.apply { state = newState }
 

@@ -31,7 +31,7 @@ create table subscription
     id         uuid         primary key ,
     date_end   timestamp(6) not null,
     date_start timestamp(6) not null,
-    is_paid    boolean      not null default false,
+    is_active    boolean      not null default false,
     owner_id   uuid         not null,
     tariff_id  uuid         not null
 );

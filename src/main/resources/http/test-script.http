@@ -13,7 +13,7 @@ Accept: */*
 }
 
 ###
-@owner_id=ca477eed-101f-4d70-a012-a5448eb2bafd
+@owner_id=445ec2fb-2c03-483e-a410-6d6cecd00dce
 
 ### -------------------------------
 ### Create new Group (Unauthorized)
@@ -44,7 +44,7 @@ Authorization: Basic {{user_basic}}
 
 
 ###
-@group_id=6c3bec57-e476-445d-baf8-9d9d258fd821
+@group_id=79c5c4c2-6bbf-4b4d-8868-48636430fb35
 
 ### -------------------------------
 ### Create new Card Credentials(as User)
@@ -62,7 +62,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@card_cerdentials_id=9810290e-099b-417c-bb3d-79ec284c8852
+@card_cerdentials_id=65006c77-fd64-48c6-b8e4-6b6993f38209
 
 ### -------------------------------
 ### Get Users groups
@@ -231,7 +231,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@tariff_id=6b0f8f65-dff5-45ea-9546-1b2238443d0e
+@tariff_id=3ad26383-cad5-4bf1-b78d-99e0188e3469
 
 ### -------------------------------
 ### Create subscription(as User)
@@ -250,7 +250,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@subscription_transaction_id=8e0d86ca-0787-4f94-9734-dbba63a03f60
+@subscription_transaction_id=575b9677-4909-4d82-b0ab-3caf0bfdf180
 
 ### -------------------------------
 ### Get user subscriptions
