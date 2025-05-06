@@ -6,6 +6,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
 import ru.itmo.blpslab1.config.KafkaTopicsConfig
 import ru.itmo.blpslab1.domain.enums.ActionType
+import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.kafka.event.DeadLetterEvent
 import ru.itmo.blpslab1.kafka.event.TransactionEvent
 import ru.itmo.blpslab1.kafka.service.DeadLetterQueueService
@@ -28,10 +29,11 @@ class TransactionEventConsumer(
     fun handleTransactionEvent(transactionEvent: TransactionEvent){
         log.info("Received new event: $transactionEvent")
         val res = processTransactionEvent(transactionEvent)
-        if (res.isError()) deadLetterQueueService.sendDeathLetterInfo(DeadLetterEvent(kafkaTopicsConfig.transactionEvents, transactionEvent))
+        if (res.isError()) deadLetterQueueService.sendDeadLetterInfo(DeadLetterEvent(kafkaTopicsConfig.transactionEvents, transactionEvent))
     }
 
     private fun processTransactionEvent(transactionEvent: TransactionEvent): Result<*>{
+        if (transactionEvent.transactionState != TransactionState.PAID) return ok<Nothing>()
         return when(transactionEvent.actionType) {
             ActionType.GOAL -> invokeGoalTransactionProcessing(transactionEvent)
             ActionType.SUBSCRIPTION -> invokeSubscriptionTransactionProcessing(transactionEvent)

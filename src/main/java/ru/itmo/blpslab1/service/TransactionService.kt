@@ -22,9 +22,7 @@ interface TransactionService {
         id: UUID
     ): Result<TransactionResponse>
 
-    @PreAuthorize("hasAnyAuthority('TRANSACTION_ADMIN')")
     fun editTransactionState(
-        userDetails: UserDetails,
         id: UUID,
         newState: TransactionState
     ): Result<TransactionResponse>

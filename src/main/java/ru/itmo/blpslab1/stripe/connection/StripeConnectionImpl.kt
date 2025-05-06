@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus
 import ru.itmo.blpslab1.utils.service.Result
 import ru.itmo.blpslab1.utils.service.error
 import ru.itmo.blpslab1.utils.service.ok
+import java.util.UUID
 import javax.resource.cci.ConnectionMetaData
 import javax.resource.cci.Interaction
 import javax.resource.cci.LocalTransaction
@@ -25,12 +26,13 @@ class StripeConnectionImpl(
         Stripe.apiKey = apiKey
     }
 
-    override fun createPayment(source: String, amount: Int, currency: String): Result<Session> {
+    override fun createPayment(productName: String, amount: Int, currency: String, localTransactionId: UUID): Result<Session> {
         Stripe.apiKey = apiKey
         val params = SessionCreateParams.builder()
             .setMode(SessionCreateParams.Mode.PAYMENT)
             .setSuccessUrl("https://yourdomain.com/success?session_id={CHECKOUT_SESSION_ID}")
             .setCancelUrl("https://yourdomain.com/cancel")
+            .setClientReferenceId(localTransactionId.toString())
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
                     .setQuantity(1L)
@@ -40,7 +42,7 @@ class StripeConnectionImpl(
                             .setUnitAmount(amount.toLong())
                             .setProductData(
                                 SessionCreateParams.LineItem.PriceData.ProductData.builder()
-                                    .setName("Тестовый товар")
+                                    .setName(productName)
                                     .build()
                             )
                             .build()

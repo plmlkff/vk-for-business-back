@@ -139,6 +139,7 @@ class SubscriptionServiceImpl(
         targetEntityId = subscriptionId,
         payerId = payerId,
         payerCardId = payerCardId,
-        recipientCardId = tariff.recipientCard.id
+        recipientCardId = tariff.recipientCard.id,
+        productName = tariff.name
     )
 }

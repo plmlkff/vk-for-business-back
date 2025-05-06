@@ -56,5 +56,7 @@ kafka-topics:
   transaction-events: ${KAFKA_TOPIC_TRANSACTION_EVENTS}
   death-letter-queue: ${KAFKA_TOPIC_DEATH_LETTER_QUEUE}
 stripe:
-  webhooks:
+  api:
     secret: ${STRIPE_API_KEY}
+  webhooks:
+    secret: ${STRIPE_WEBHOOK_SECRET_KEY}

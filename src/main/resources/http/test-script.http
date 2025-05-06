@@ -13,7 +13,7 @@ Accept: */*
 }
 
 ###
-@owner_id=445ec2fb-2c03-483e-a410-6d6cecd00dce
+@owner_id=035dae80-a7ff-4d0f-b7e6-a6784f9ebab9
 
 ### -------------------------------
 ### Create new Group (Unauthorized)
@@ -44,7 +44,7 @@ Authorization: Basic {{user_basic}}
 
 
 ###
-@group_id=79c5c4c2-6bbf-4b4d-8868-48636430fb35
+@group_id=61192cfb-93ba-4105-8457-bd528c32c96f
 
 ### -------------------------------
 ### Create new Card Credentials(as User)
@@ -62,7 +62,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@card_cerdentials_id=65006c77-fd64-48c6-b8e4-6b6993f38209
+@card_cerdentials_id=86717b94-1e8a-42c0-98aa-1d2da61ef32a
 
 ### -------------------------------
 ### Get Users groups
@@ -159,7 +159,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@goal_id=990712cd-a290-4d66-9e55-862c56d0ea1e
+@goal_id=de4fcdaf-4081-4c8a-91d6-f8196cfa716c
 
 ### -------------------------------
 ### Get group goals(as User)

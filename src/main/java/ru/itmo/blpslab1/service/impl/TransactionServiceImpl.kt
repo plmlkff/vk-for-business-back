@@ -60,7 +60,7 @@ class TransactionServiceImpl(
 
         transactionRepository.save(filledTransaction)
 
-        val link = paymentGatewayService.registerPayment(filledTransaction)
+        val link = paymentGatewayService.registerPayment(filledTransaction, transactionRequest.productName)
 
         return ok(filledTransaction.toResponse().copy(paymentLink = link))
     }
@@ -76,20 +76,18 @@ class TransactionServiceImpl(
 
     @Transactional(isolation = Isolation.SERIALIZABLE)
     override fun editTransactionState(
-        userDetails: UserDetails,
         id: UUID,
         newState: TransactionState
     ): Result<TransactionResponse> {
-        if (userDetails hasNoAuthority UserAuthority.TRANSACTION_ADMIN) return error(METHOD_NOT_ALLOWED)
-
         val dbTransaction = transactionRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
 
         if (dbTransaction.state != TransactionState.NEW) return ok(dbTransaction.toResponse())
 
-        val newTransaction = dbTransaction.apply { state = newState }
+        var newTransaction = dbTransaction.apply { state = newState }
+        newTransaction = transactionRepository.save(newTransaction)
 
         transactionKafkaEventService.publishEvent(newTransaction.toKafkaEvent())
-        return ok(transactionRepository.save(newTransaction).toResponse())
+        return ok(newTransaction.toResponse())
     }
 
 
@@ -106,7 +104,8 @@ class TransactionServiceImpl(
             targetEntityId = null,
             payerId = onceDonationRequest.payerId,
             payerCardId = onceDonationRequest.payerCardId,
-            recipientCardId = onceDonationRequest.recipientCardId
+            recipientCardId = onceDonationRequest.recipientCardId,
+            productName = "Once donation"
         )
 
         return createTransaction(userDetails, transactionRequest);
@@ -125,7 +124,8 @@ class TransactionServiceImpl(
             targetEntityId = goal.id,
             payerId = goalDonationRequest.payerId,
             payerCardId = goalDonationRequest.payerCardId,
-            recipientCardId = goal.recipientCard.id
+            recipientCardId = goal.recipientCard.id,
+            productName = goal.name
         )
 
         return createTransaction(userDetails, transactionRequest);

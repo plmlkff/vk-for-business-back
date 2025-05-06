@@ -13,7 +13,8 @@ data class TransactionRequest(
     val targetEntityId: UUID?,
     val payerId: UUID,
     val payerCardId: UUID,
-    val recipientCardId: UUID
+    val recipientCardId: UUID,
+    val productName: String
 )
 
 fun TransactionRequest.toDomain() = Transaction().also {

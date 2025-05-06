@@ -58,8 +58,7 @@ create table transaction
     recipient_card_id  uuid         not null,
     transaction_type   varchar(255) not null,
     target_entity_id   uuid,
-    constraint transaction_transaction_type_enum_value_constr check ( transaction_type in ('DEBIT', 'WITHDRAW') ),
-    constraint transaction_transaction_type_and_target_entity_id_unique_constr unique (transaction_type, target_entity_id)
+    constraint transaction_transaction_type_enum_value_constr check ( transaction_type in ('DEBIT', 'WITHDRAW') )
 );
 
 create table goal

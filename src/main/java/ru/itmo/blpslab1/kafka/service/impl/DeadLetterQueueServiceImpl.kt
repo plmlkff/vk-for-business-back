@@ -15,7 +15,7 @@ class DeadLetterQueueServiceImpl(
 ): DeadLetterQueueService {
     val log: Logger = LoggerFactory.getLogger(DeadLetterQueueServiceImpl::class.java)
 
-    override fun sendDeathLetterInfo(deadLetterEvent: DeadLetterEvent) {
+    override fun sendDeadLetterInfo(deadLetterEvent: DeadLetterEvent) {
         log.info("Publishing new death letter: $deadLetterEvent")
         kafkaTemplate.send(kafkaTopicsConfig.deathLetterQueue, deadLetterEvent)
     }
