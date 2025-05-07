@@ -8,12 +8,11 @@ import org.springframework.transaction.annotation.Transactional
 import ru.itmo.blpslab1.domain.enums.ActionType
 import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.domain.enums.TransactionType
-import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.GoalRepository
 import ru.itmo.blpslab1.domain.repository.TransactionRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
-import ru.itmo.blpslab1.kafka.event.toKafkaEvent
+import ru.itmo.blpslab1.kafka.event.transaction.toKafkaEvent
 import ru.itmo.blpslab1.kafka.service.TransactionKafkaEventService
 import ru.itmo.blpslab1.rest.dto.request.GoalDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.OnceDonationRequest
@@ -23,9 +22,7 @@ import ru.itmo.blpslab1.rest.dto.response.TransactionResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
 import ru.itmo.blpslab1.service.TransactionService
 import ru.itmo.blpslab1.service.paymentgateway.PaymentGatewayService
-import ru.itmo.blpslab1.utils.core.hasNoAuthority
 import ru.itmo.blpslab1.utils.core.test
-import ru.itmo.blpslab1.utils.core.toResponse
 import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
 import ru.itmo.blpslab1.utils.service.*

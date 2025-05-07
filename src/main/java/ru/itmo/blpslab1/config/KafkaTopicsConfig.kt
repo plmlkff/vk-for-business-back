@@ -8,4 +8,5 @@ import org.springframework.context.annotation.Configuration
 class KafkaTopicsConfig {
     lateinit var transactionEvents: String
     lateinit var deathLetterQueue: String
+    lateinit var subscriptionEvents: String
 }

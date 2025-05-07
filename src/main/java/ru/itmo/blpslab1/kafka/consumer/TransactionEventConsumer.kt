@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service
 import ru.itmo.blpslab1.config.KafkaTopicsConfig
 import ru.itmo.blpslab1.domain.enums.ActionType
 import ru.itmo.blpslab1.domain.enums.TransactionState
-import ru.itmo.blpslab1.kafka.event.DeadLetterEvent
-import ru.itmo.blpslab1.kafka.event.TransactionEvent
+import ru.itmo.blpslab1.kafka.event.dlq.DeadLetterEvent
+import ru.itmo.blpslab1.kafka.event.transaction.TransactionEvent
 import ru.itmo.blpslab1.kafka.service.DeadLetterQueueService
 import ru.itmo.blpslab1.rest.dto.request.GoalAmountChangeRequest
 import ru.itmo.blpslab1.service.GoalService

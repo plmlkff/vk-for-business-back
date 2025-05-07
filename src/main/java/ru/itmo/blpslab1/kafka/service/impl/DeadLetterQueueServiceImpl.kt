@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.stereotype.Service
 import ru.itmo.blpslab1.config.KafkaTopicsConfig
-import ru.itmo.blpslab1.kafka.event.DeadLetterEvent
+import ru.itmo.blpslab1.kafka.event.dlq.DeadLetterEvent
 import ru.itmo.blpslab1.kafka.service.DeadLetterQueueService
 
 @Service

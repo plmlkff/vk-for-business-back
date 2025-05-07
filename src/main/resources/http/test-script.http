@@ -13,7 +13,7 @@ Accept: */*
 }
 
 ###
-@owner_id=035dae80-a7ff-4d0f-b7e6-a6784f9ebab9
+@owner_id=5fcdeb21-940f-4b60-94af-e2d61de3699a
 
 ### -------------------------------
 ### Create new Group (Unauthorized)
@@ -44,7 +44,7 @@ Authorization: Basic {{user_basic}}
 
 
 ###
-@group_id=61192cfb-93ba-4105-8457-bd528c32c96f
+@group_id=463cd570-3501-4e7f-9ada-3f6dbdf3139f
 
 ### -------------------------------
 ### Create new Card Credentials(as User)
@@ -62,7 +62,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@card_cerdentials_id=86717b94-1e8a-42c0-98aa-1d2da61ef32a
+@card_cerdentials_id=1493acb3-9042-414c-9eab-d48fe8a5ab5e
 
 ### -------------------------------
 ### Get Users groups
@@ -231,7 +231,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@tariff_id=3ad26383-cad5-4bf1-b78d-99e0188e3469
+@tariff_id=d1d94842-44fc-46fd-898a-3dee860636ad
 
 ### -------------------------------
 ### Create subscription(as User)
@@ -242,15 +242,13 @@ Accept: */*
 Authorization: Basic {{user_basic}}
 
 {
-  "from": "2025-04-08T22:50:51.132Z",
-  "to": "2025-05-08T22:50:51.132Z",
   "tariffId": "{{tariff_id}}",
   "ownerId": "{{owner_id}}",
   "ownerCardId": "{{card_cerdentials_id}}"
 }
 
 ###
-@subscription_transaction_id=575b9677-4909-4d82-b0ab-3caf0bfdf180
+@subscription_transaction_id=2523c703-df1a-44a1-a894-b4ffde79114e
 
 ### -------------------------------
 ### Get user subscriptions

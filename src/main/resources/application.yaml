@@ -22,6 +22,10 @@ spring:
   jwt:
     life-time: 3600000  # ms
     secret: ${SECRET}
+  quartz:
+    job-store-type: memory
+    wait-for-jobs-to-complete-on-shutdown: false
+    subscription-deactivator-job-period: ${QUARTZ_JOB_SUBSCRIPTION_DEACTIVATOR_JOB_PERIOD}
   kafka:
     bootstrap-servers: localhost:29092
     producer:
@@ -55,6 +59,7 @@ minio:
 kafka-topics:
   transaction-events: ${KAFKA_TOPIC_TRANSACTION_EVENTS}
   death-letter-queue: ${KAFKA_TOPIC_DEATH_LETTER_QUEUE}
+  subscription-events: ${KAFKA_TOPIC_SUBSCRIPTION_EVENTS}
 stripe:
   api:
     secret: ${STRIPE_API_KEY}

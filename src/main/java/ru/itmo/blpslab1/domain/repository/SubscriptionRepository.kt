@@ -18,4 +18,12 @@ interface SubscriptionRepository: JpaRepository<Subscription, UUID> {
         """
     )
     fun findAllByOwner(@Param("username") username: String): List<Subscription>
+
+    @Query(
+        """
+            SELECT deactivateExpiredSubscriptions() AS id
+        """,
+        nativeQuery = true
+    )
+    fun findAndDeactivateExpiredSubscriptionsAndGetTheirIds(): List<UUID>
 }
