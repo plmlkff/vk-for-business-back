@@ -19,7 +19,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/promotion-task")
-@SecurityRequirement(name = "JWT")
 class PromotionTaskController(
     private val promotionTaskService: PromotionTaskService
 ) {
@@ -50,7 +49,7 @@ class PromotionTaskController(
         ) = promotionTaskService.removePromotionTask(userDetails, id)
 
     @PatchMapping("/{id}/approve")
-    fun createPromotionTask(
+    fun approvePromotionTask(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = promotionTaskService.approvePromotionTask(userDetails, id)

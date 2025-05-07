@@ -15,3 +15,9 @@ db:
 
 minio:
 	docker-compose up -d minio
+
+kafka:
+	docker compose up -d kafka kafka-ui zookeeper kafka-topics-generator
+
+down-kafka:
+	docker compose down kafka kafka-ui zookeeper kafka-topics-generator

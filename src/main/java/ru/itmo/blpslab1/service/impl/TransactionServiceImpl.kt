@@ -3,16 +3,17 @@ package ru.itmo.blpslab1.service.impl
 import org.springframework.http.HttpStatus.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
-import ru.itmo.blpslab1.core.event.entity.TransactionChangedEvent
 import ru.itmo.blpslab1.domain.enums.ActionType
 import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.domain.enums.TransactionType
-import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.GoalRepository
 import ru.itmo.blpslab1.domain.repository.TransactionRepository
 import ru.itmo.blpslab1.domain.repository.UserRepository
+import ru.itmo.blpslab1.kafka.event.transaction.toKafkaEvent
+import ru.itmo.blpslab1.kafka.service.TransactionKafkaEventService
 import ru.itmo.blpslab1.rest.dto.request.GoalDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.OnceDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.TransactionRequest
@@ -21,7 +22,6 @@ import ru.itmo.blpslab1.rest.dto.response.TransactionResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
 import ru.itmo.blpslab1.service.TransactionService
 import ru.itmo.blpslab1.service.paymentgateway.PaymentGatewayService
-import ru.itmo.blpslab1.utils.core.hasNoAuthority
 import ru.itmo.blpslab1.utils.core.test
 import ru.itmo.blpslab1.utils.service.Result
 import java.util.UUID
@@ -34,7 +34,8 @@ class TransactionServiceImpl(
     private val userRepository: UserRepository,
     private val cardCredentialRepository: CardCredentialRepository,
     private val paymentGatewayService: PaymentGatewayService,
-    private val goalRepository: GoalRepository
+    private val goalRepository: GoalRepository,
+    private val transactionKafkaEventService: TransactionKafkaEventService
 ) : TransactionService {
 
     @Transactional
@@ -56,7 +57,7 @@ class TransactionServiceImpl(
 
         transactionRepository.save(filledTransaction)
 
-        val link = paymentGatewayService.registerPayment(filledTransaction)
+        val link = paymentGatewayService.registerPayment(filledTransaction, transactionRequest.productName)
 
         return ok(filledTransaction.toResponse().copy(paymentLink = link))
     }
@@ -70,18 +71,20 @@ class TransactionServiceImpl(
         onFalse = { error(NOT_FOUND) }
     )
 
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     override fun editTransactionState(
-        userDetails: UserDetails,
         id: UUID,
         newState: TransactionState
     ): Result<TransactionResponse> {
-        if (userDetails hasNoAuthority UserAuthority.TRANSACTION_ADMIN) return error(METHOD_NOT_ALLOWED)
-
         val dbTransaction = transactionRepository.findById(id).getOrNull() ?: return error(NOT_FOUND)
 
-        val newTransaction = dbTransaction.apply { state = newState }
-        return ok(transactionRepository.save(newTransaction).toResponse())
-            .withEvents(TransactionChangedEvent(newTransaction))
+        if (dbTransaction.state != TransactionState.NEW) return ok(dbTransaction.toResponse())
+
+        var newTransaction = dbTransaction.apply { state = newState }
+        newTransaction = transactionRepository.save(newTransaction)
+
+        transactionKafkaEventService.publishEvent(newTransaction.toKafkaEvent())
+        return ok(newTransaction.toResponse())
     }
 
 
@@ -98,7 +101,8 @@ class TransactionServiceImpl(
             targetEntityId = null,
             payerId = onceDonationRequest.payerId,
             payerCardId = onceDonationRequest.payerCardId,
-            recipientCardId = onceDonationRequest.recipientCardId
+            recipientCardId = onceDonationRequest.recipientCardId,
+            productName = "Once donation"
         )
 
         return createTransaction(userDetails, transactionRequest);
@@ -117,7 +121,8 @@ class TransactionServiceImpl(
             targetEntityId = goal.id,
             payerId = goalDonationRequest.payerId,
             payerCardId = goalDonationRequest.payerCardId,
-            recipientCardId = goal.recipientCard.id
+            recipientCardId = goal.recipientCard.id,
+            productName = goal.name
         )
 
         return createTransaction(userDetails, transactionRequest);

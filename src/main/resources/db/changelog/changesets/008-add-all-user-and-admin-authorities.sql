@@ -19,7 +19,7 @@ VALUES ((SELECT id FROM role_user), 'PROMOTION_TASK_CREATE'),
        ((SELECT id FROM role_user), 'TARIFF_DELETE'),
        ((SELECT id FROM role_admin), 'TARIFF_ADMIN'),
 
-       ((SELECT id FROM role_user), 'TRANSACTION_VIEW'),
+       ((SELECT id FROM role_user), 'TRANSACTION_CREATE'),
        ((SELECT id FROM role_admin), 'TRANSACTION_ADMIN'),
 
        ((SELECT id FROM role_user), 'USER_CREATE'),

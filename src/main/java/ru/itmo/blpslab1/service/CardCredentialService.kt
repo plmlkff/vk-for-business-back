@@ -19,4 +19,7 @@ interface CardCredentialService {
 
     @PreAuthorize("hasAnyAuthority('CARD_CREDENTIAL_DELETE', 'CARD_CREDENTIAL_ADMIN')")
     fun removeCardCredential(userDetails: UserDetails, id: UUID): Result<Unit>
+
+    @PreAuthorize("hasAnyAuthority('CARD_CREDENTIAL_VIEW', 'CARD_CREDENTIAL_ADMIN')")
+    fun getAllCardCredentialByUser(userDetails: UserDetails): Result<List<CardCredentialResponse>>
 }

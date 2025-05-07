@@ -20,7 +20,6 @@ import ru.itmo.blpslab1.rest.dto.request.TransactionRequest
 import ru.itmo.blpslab1.rest.dto.request.toDomain
 import ru.itmo.blpslab1.rest.dto.response.SubscriptionResponse
 import ru.itmo.blpslab1.rest.dto.response.toResponse
-import ru.itmo.blpslab1.service.CardCredentialService
 import ru.itmo.blpslab1.service.SubscriptionService
 import ru.itmo.blpslab1.service.TransactionService
 import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
@@ -49,7 +48,7 @@ class SubscriptionServiceImpl(
 
         val tariff = tariffRepository.findById(subscriptionRequest.tariffId).getOrNull() ?: return error(NOT_FOUND)
         val owner = tariff.group.owner
-        val ownerCard = cardCredentialRepository.findById(subscriptionRequest.ownerCardId).getOrNull() ?: kotlin.error(NOT_FOUND)
+        val ownerCard = cardCredentialRepository.findById(subscriptionRequest.ownerCardId).getOrNull() ?: return error(NOT_FOUND)
 
         if (owner.login != userDetails.username
             && userDetails hasNoAuthority UserAuthority.SUBSCRIPTION_ADMIN) return error(METHOD_NOT_ALLOWED)
@@ -114,13 +113,19 @@ class SubscriptionServiceImpl(
         onFalse = { error(NOT_FOUND) }
     )
 
+    override fun getAllByOwner(
+        userDetails: UserDetails
+    ): Result<List<SubscriptionResponse>> = ok(
+        subscriptionRepository.findAllByOwner(userDetails.username)
+            .map { it.toResponse() }
+    )
+
     @Transactional
     override fun markSubscriptionPaid(
-        userDetails: UserDetails,
         id: UUID
     ) = subscriptionRepository.findById(id).getOrNull().test(
         condition = {it != null},
-        onTrue = { ok(subscriptionRepository.save(it!!.apply { isPaid = true }).toResponse()) },
+        onTrue = { ok(subscriptionRepository.save(it!!.apply { isActive = true }).toResponse()) },
         onFalse = { error(NOT_FOUND) }
     )
 
@@ -134,6 +139,7 @@ class SubscriptionServiceImpl(
         targetEntityId = subscriptionId,
         payerId = payerId,
         payerCardId = payerCardId,
-        recipientCardId = tariff.recipientCard.id
+        recipientCardId = tariff.recipientCard.id,
+        productName = tariff.name
     )
 }

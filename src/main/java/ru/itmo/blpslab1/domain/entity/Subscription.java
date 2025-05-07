@@ -25,9 +25,9 @@ public class Subscription {
     @NotNull
     private Date to;
 
-    @Column(name = "is_paid", nullable = false)
+    @Column(name = "is_active", nullable = false)
     @NotNull
-    private boolean isPaid = false;
+    private boolean isActive = false;
 
     @ManyToOne
     @JoinColumn(name = "tariff_id", nullable = false)

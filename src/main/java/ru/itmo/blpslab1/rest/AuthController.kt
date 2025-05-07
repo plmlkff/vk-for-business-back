@@ -11,7 +11,6 @@ import ru.itmo.blpslab1.utils.core.toResponse
 
 @RestController
 @RequestMapping("/api/users")
-@SecurityRequirement(name = "JWT")
 class AuthController(
     private var authUserService: AuthUserService
 ) {

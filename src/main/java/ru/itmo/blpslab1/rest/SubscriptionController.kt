@@ -11,7 +11,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/subscription")
-@SecurityRequirement(name = "JWT")
 class SubscriptionController(
     private val subscriptionService: SubscriptionService
 ) {
@@ -40,4 +39,9 @@ class SubscriptionController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = subscriptionService.removeSubscription(userDetails, id)
+
+    @GetMapping("/")
+    fun getAllByOwnerId(
+        @AuthenticationPrincipal userDetails: UserDetails,
+    ) = subscriptionService.getAllByOwner(userDetails)
 }

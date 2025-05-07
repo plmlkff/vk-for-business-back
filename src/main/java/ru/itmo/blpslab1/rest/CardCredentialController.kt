@@ -1,6 +1,5 @@
 package ru.itmo.blpslab1.rest
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
@@ -18,7 +17,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/card-credentials")
-@SecurityRequirement(name = "JWT")
 class CardCredentialController(
     val cardCredentialService: CardCredentialService
 ) {
@@ -47,4 +45,9 @@ class CardCredentialController(
         @AuthenticationPrincipal userDetails: UserDetails,
         @PathVariable(name = "id") id: UUID
     ) = cardCredentialService.removeCardCredential(userDetails, id)
+
+    @GetMapping("/")
+    fun getAllUserCredentials(
+        @AuthenticationPrincipal userDetails: UserDetails
+    ) = cardCredentialService.getAllCardCredentialByUser(userDetails)
 }

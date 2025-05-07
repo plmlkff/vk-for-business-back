@@ -11,7 +11,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/tariff")
-@SecurityRequirement(name = "JWT")
 class TariffController(
     private val tariffService: TariffService
 ) {

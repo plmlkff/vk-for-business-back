@@ -26,7 +26,7 @@ class PromotionTaskSpecification(
         }
         if (promotionTaskQuery.isApproved != null){
             val isApprovedPredicate = criteriaBuilder.equal(root.get<Boolean>(PromotionTask.Fields.IS_APPROVED), promotionTaskQuery.isApproved)
-            criteriaBuilder.and(resPredicate, isApprovedPredicate)
+            resPredicate = criteriaBuilder.and(resPredicate, isApprovedPredicate)
         }
         if (isNotEmpty(promotionTaskQuery.promotionTypes)){
             val promotionTypesPredicate = root.get<String>(PromotionTask.Fields.PROMOTION_TYPE).`in`(promotionTaskQuery.promotionTypes!!.map { it.name })

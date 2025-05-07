@@ -15,7 +15,7 @@ import ru.itmo.blpslab1.utils.security.JwtUtil;
 
 import java.io.IOException;
 
-@Component
+//@Component
 @AllArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
 

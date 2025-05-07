@@ -6,6 +6,7 @@ import org.springframework.retry.annotation.Retryable
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import ru.itmo.blpslab1.domain.entity.Goal
 import ru.itmo.blpslab1.domain.enums.TransactionType
 import ru.itmo.blpslab1.domain.enums.UserAuthority
 import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
@@ -88,11 +89,17 @@ class GoalServiceImpl(
         else error(METHOD_NOT_ALLOWED)
     }
 
+    override fun getAllByGroupId(userDetails: UserDetails, groupId: UUID): Result<List<GoalResponse>> {
+        val dbGroup = groupRepository.findById(groupId).getOrNull() ?: return error(NOT_FOUND)
+
+        if (userDetails hasNoAccessTo dbGroup) return error(METHOD_NOT_ALLOWED)
+
+        return ok(goalRepository.findAllByGroupId(groupId).map { it.toResponse() })
+    }
+
     @Retryable(maxAttempts = 20, retryFor = [StaleStateException::class])
     @Transactional
-    override fun editGoalAmount(userDetails: UserDetails, request: GoalAmountChangeRequest): Result<GoalResponse> {
-        if (userDetails hasNoAuthority UserAuthority.GOAL_ADMIN) return error(METHOD_NOT_ALLOWED)
-
+    override fun editGoalAmount(request: GoalAmountChangeRequest): Result<GoalResponse> {
         val dbGoal = goalRepository.findById(request.goalId).getOrNull() ?: return error(NOT_FOUND)
 
         when(request.transactionType){

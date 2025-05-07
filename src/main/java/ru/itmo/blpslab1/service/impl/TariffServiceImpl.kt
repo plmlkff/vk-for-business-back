@@ -1,9 +1,11 @@
 package ru.itmo.blpslab1.service.impl
 
+import jakarta.transaction.Transactional
 import org.springframework.http.HttpStatus.*
 import ru.itmo.blpslab1.utils.service.*
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
+import ru.itmo.blpslab1.domain.repository.CardCredentialRepository
 import ru.itmo.blpslab1.domain.repository.GroupRepository
 import ru.itmo.blpslab1.domain.repository.TariffRepository
 import ru.itmo.blpslab1.rest.dto.request.TariffRequest
@@ -22,15 +24,21 @@ import kotlin.jvm.optionals.getOrNull
 class TariffServiceImpl(
     private val tariffRepository: TariffRepository,
     private val userImageService: UserImageService,
-    private val groupRepository: GroupRepository
+    private val groupRepository: GroupRepository,
+    private val cardCredentialRepository: CardCredentialRepository
 ): TariffService {
+    @Transactional
     override fun createTariff(userDetails: UserDetails, tariffRequest: TariffRequest): Result<TariffResponse> {
         if (tariffRequest.id != null) return error()
 
         val dbGroup = groupRepository.findById(tariffRequest.groupId).getOrNull() ?: return error(NOT_FOUND)
+        val cardCredential = cardCredentialRepository.findById(tariffRequest.recipientCardId).getOrNull() ?: return error(NOT_FOUND)
         if (userDetails hasNoAccessTo dbGroup) return error(METHOD_NOT_ALLOWED)
 
-        var tariff = tariffRepository.save(tariffRequest.toDomain().apply { group = dbGroup })
+        var tariff = tariffRepository.save(tariffRequest.toDomain().apply {
+            group = dbGroup
+            recipientCard = cardCredential
+        })
 
         if (tariffRequest.previewImage == null) return ok(tariff.toResponse())
 
@@ -53,6 +61,7 @@ class TariffServiceImpl(
         return ok(tariff.toResponse().apply { previewImage = dbImage })
     }
 
+    @Transactional
     override fun editTariff(userDetails: UserDetails, tariffRequest: TariffRequest): Result<TariffResponse> {
         if (tariffRequest.id == null) return error()
 
@@ -69,6 +78,7 @@ class TariffServiceImpl(
         return ok(tariffRepository.save(dbTariff.apply { previewImageName = newImageName }).toResponse())
     }
 
+    @Transactional
     override fun removeTariff(
         userDetails: UserDetails,
         id: UUID

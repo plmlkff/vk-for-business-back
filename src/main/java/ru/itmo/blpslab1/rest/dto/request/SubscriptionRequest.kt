@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class SubscriptionRequest(
     val id: UUID?,
-    val from: Date,
+    val from: Date = Date(),
     val to: Date?,
     val tariffId: UUID,
     val ownerId: UUID,

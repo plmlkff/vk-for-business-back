@@ -1,16 +1,15 @@
 package ru.itmo.blpslab1.rest
 
-import io.swagger.v3.oas.annotations.security.SecurityRequirement
 import jakarta.validation.Valid
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
-import ru.itmo.blpslab1.domain.enums.TransactionState
 import ru.itmo.blpslab1.rest.dto.request.GoalDonationRequest
 import ru.itmo.blpslab1.rest.dto.request.OnceDonationRequest
 import ru.itmo.blpslab1.service.TransactionService
@@ -18,7 +17,6 @@ import java.util.UUID
 
 @RestController
 @RequestMapping("/api/transaction")
-@SecurityRequirement(name = "JWT")
 class TransactionController(
     private val transactionService: TransactionService
 ) {
@@ -34,10 +32,9 @@ class TransactionController(
         @Valid @RequestBody goalDonationRequest: GoalDonationRequest
     ) = transactionService.createGoalDonation(userDetails, goalDonationRequest)
 
-    @PatchMapping("/{id}/callback")
-    fun transactionCallback(
+    @GetMapping("/{id}")
+    fun getTransaction(
         @AuthenticationPrincipal userDetails: UserDetails,
-        @PathVariable("id") id: UUID,
-        @Valid @RequestBody transactionState: TransactionState
-    ) = transactionService.editTransactionState(userDetails, id, transactionState)
+        @PathVariable("id") id: UUID
+    ) = transactionService.getTransaction(userDetails, id)
 }

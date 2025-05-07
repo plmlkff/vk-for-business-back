@@ -81,6 +81,10 @@ class GroupServiceImpl(
         onFalse = { error(NOT_FOUND) }
     )
 
+    override fun getAllByUser(
+        userDetails: UserDetails
+    ): Result<List<GroupResponse>> = ok(groupRepository.findAllByOwner(userDetails.username).map(Group::toResponse))
+
     private fun GroupRequest.toFilledDomain(): Group?{
         val newOwner = userRepository.findById(ownerId).getOrNull() ?: return null
         val newSubscribers = userRepository.findAllById(subscriberIds)

@@ -1,29 +1,28 @@
 package ru.itmo.blpslab1.service.paymentgateway
 
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
+import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import ru.itmo.blpslab1.domain.entity.Transaction
-import ru.itmo.blpslab1.domain.enums.UserAuthority
-import java.util.UUID
+import ru.itmo.blpslab1.service.exceptions.RollbackTransactionException
+import ru.itmo.blpslab1.stripe.connectionfactory.StripeConnectionFactory
 
 @Service
-class PaymentGatewayServiceImpl: PaymentGatewayService {
+class PaymentGatewayServiceImpl(
+    private val stripeConnectionFactory: StripeConnectionFactory
+): PaymentGatewayService {
+    companion object{
+        const val KOPECK_IN_RUBLE = 100
 
-    private object SuperUser: UserDetails{
-        private fun readResolve(): Any = SuperUser
-
-        override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-            return mutableSetOf(UserAuthority.TRANSACTION_ADMIN)
-        }
-
-        override fun getPassword(): String = ""
-
-        override fun getUsername(): String = ""
-
+        const val CURRENCY_RUB = "rub"
     }
 
-    override fun registerPayment(transaction: Transaction): String{
-        return "https://pay-pay-pay.ru/payment/${UUID.randomUUID()}"
+    override fun registerPayment(transaction: Transaction, productName: String): String{
+        val connection = stripeConnectionFactory.connection
+
+        val session = connection.createPayment(productName, transaction.amount.toInt() * KOPECK_IN_RUBLE, CURRENCY_RUB, transaction.id)
+
+        if (session.isError()) throw RollbackTransactionException(HttpStatus.INTERNAL_SERVER_ERROR)
+
+        return session.body!!.url
     }
 }
