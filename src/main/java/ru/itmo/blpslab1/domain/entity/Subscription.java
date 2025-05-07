@@ -17,21 +17,31 @@ public class Subscription {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "date_start", nullable = false)
     @NotNull
     private Date from;
 
-    @Column(nullable = false)
+    @Column(name = "date_end", nullable = false)
     @NotNull
     private Date to;
 
+    @Column(name = "is_active", nullable = false)
+    @NotNull
+    private boolean isActive = false;
+
     @ManyToOne
-    @JoinColumn(name = "tariff_id")
+    @JoinColumn(name = "tariff_id", nullable = false)
     @NotNull
     private Tariff tariff;
 
     @ManyToOne
-    @JoinColumn(name = "group_id")
+    @JoinColumn(name = "owner_id", nullable = false)
     @NotNull
-    private Group group;
+    private User owner;
+
+    public interface Fields{
+        String TARIFF = "tariff";
+
+        String OWNER = "owner";
+    }
 }

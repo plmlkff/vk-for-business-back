@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import java.util.Date;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -30,5 +31,22 @@ public class CardCredential {
 
     @Column(nullable = false)
     @NotNull
-    private Short cvv;
+    @Size(min = 3)
+    @Size(max = 3)
+    private String cvv;
+
+    @ManyToOne
+    @JoinColumn(name = "owner_id", nullable = false)
+    @NotNull
+    private User owner;
+
+    @OneToMany(mappedBy = Tariff.Fields.RECIPIENT_CARD, cascade = CascadeType.ALL)
+    private Set<Tariff> tariffs;
+
+    @OneToMany(mappedBy = Goal.Fields.RECIPIENT_CARD)
+    private Set<Goal> goals;
+
+    interface Fields{
+        String OWNER = "owner";
+    }
 }

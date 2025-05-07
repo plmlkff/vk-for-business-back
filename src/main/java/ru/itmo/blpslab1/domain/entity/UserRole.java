@@ -30,4 +30,8 @@ public class UserRole {
     @Column(name = "authority")
     @Enumerated(EnumType.STRING)
     private Set<UserAuthority> authorities;
+
+    public interface Fields{
+        String NAME = "name";
+    }
 }

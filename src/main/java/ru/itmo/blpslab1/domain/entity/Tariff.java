@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.Set;
 import java.util.UUID;
 
 @Table(name = "tariff")
@@ -25,4 +26,23 @@ public class Tariff {
     @NotNull
     @Min(0)
     private Double price;
+
+    @Column(name = "preview_image_name")
+    private String previewImageName;
+
+    @ManyToOne
+    @JoinColumn(name = "recipient_card_id")
+    private CardCredential recipientCard;
+
+    @ManyToOne
+    @JoinColumn(name = "group_id", nullable = false)
+    @NotNull
+    private Group group;
+
+    @OneToMany(mappedBy = Subscription.Fields.TARIFF, cascade = CascadeType.ALL)
+    private Set<Subscription> subscriptions;
+
+    public interface Fields{
+        String RECIPIENT_CARD = "recipientCard";
+    }
 }
