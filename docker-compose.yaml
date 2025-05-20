@@ -45,6 +45,7 @@ services:
     environment:
       HOST: postgres:5432
       MINIO_HOST: minio:9000
+      KAFKA_HOST: kafka:29092
     healthcheck:
       test: "wget --tries=1 -O- localhost:9090/actuator/health | grep UP || exit 1"
       interval: 60s
@@ -72,6 +73,8 @@ services:
         condition: service_healthy
     ports:
       - 29092:29092
+    networks:
+      - back
     healthcheck:
       test: [ "CMD", "nc", "-vz", "localhost", "9092" ]
       interval: 10s

@@ -13,7 +13,7 @@ Accept: */*
 }
 
 ###
-@owner_id=5fcdeb21-940f-4b60-94af-e2d61de3699a
+@owner_id=efd815fa-caa8-4de2-bb12-022182109906
 
 ### -------------------------------
 ### Create new Group (Unauthorized)
@@ -44,7 +44,7 @@ Authorization: Basic {{user_basic}}
 
 
 ###
-@group_id=463cd570-3501-4e7f-9ada-3f6dbdf3139f
+@group_id=be721b7e-e5a1-4aef-bd67-8ee9e3397c4a
 
 ### -------------------------------
 ### Create new Card Credentials(as User)
@@ -62,7 +62,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@card_cerdentials_id=1493acb3-9042-414c-9eab-d48fe8a5ab5e
+@card_cerdentials_id=783100e8-923d-43f6-9327-e7870e97a64e
 
 ### -------------------------------
 ### Get Users groups
@@ -159,7 +159,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@goal_id=de4fcdaf-4081-4c8a-91d6-f8196cfa716c
+@goal_id=7a7b5f5d-c8fb-48a8-9000-f00b6e2b165f
 
 ### -------------------------------
 ### Get group goals(as User)
@@ -178,14 +178,14 @@ Accept: */*
 Authorization: Basic {{user_basic}}
 
 {
-  "amount": 1000,
+  "amount": 1234,
   "payerId": "{{owner_id}}",
   "payerCardId": "{{card_cerdentials_id}}",
   "goalId": "{{goal_id}}"
 }
 
 ###
-@transaction_id=7f734deb-b311-49c0-8fbe-75d102d36a0e
+@transaction_id=f81a529d-8754-44a6-b13d-43f61dfcaf10
 
 ### -------------------------------
 ### Send transaction callback(as User)
@@ -224,14 +224,14 @@ Accept: */*
 Authorization: Basic {{user_basic}}
 
 {
-  "name": "Scam",
-  "price": 2000,
+  "name": "Демонстрация",
+  "price": 1234,
   "groupId": "{{group_id}}",
   "recipientCardId": "{{card_cerdentials_id}}"
 }
 
 ###
-@tariff_id=d1d94842-44fc-46fd-898a-3dee860636ad
+@tariff_id=e0be8e95-24e6-44b8-883f-42c76ba04511
 
 ### -------------------------------
 ### Create subscription(as User)
@@ -248,7 +248,7 @@ Authorization: Basic {{user_basic}}
 }
 
 ###
-@subscription_transaction_id=2523c703-df1a-44a1-a894-b4ffde79114e
+@subscription_transaction_id=a3905a00-c6d9-405f-8243-8d2f678c099d
 
 ### -------------------------------
 ### Get user subscriptions

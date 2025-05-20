@@ -27,7 +27,7 @@ spring:
     wait-for-jobs-to-complete-on-shutdown: false
     subscription-deactivator-job-period: ${QUARTZ_JOB_SUBSCRIPTION_DEACTIVATOR_JOB_PERIOD}
   kafka:
-    bootstrap-servers: localhost:29092
+    bootstrap-servers: ${KAFKA_HOST}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
